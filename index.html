@@ -182,7 +182,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   <section class="hero" aria-labelledby="mainTitle">
     <div class="hero-grid">
       <div>
-        <span class="kicker"><i></i> محرك promptify + مولّد خطط محلي — بدون حساب</span>
+        <span class="kicker"><i></i> خطة تبنى على وقتك ودخلك والتزاماتك — بدون حساب</span>
         <h1 id="mainTitle">ظروفك الحقيقية تتحوّل إلى <span class="line-accent">خطة محكمة</span> قابلة للتنفيذ</h1>
         <p class="lead">أدخل وقتك ودخلك والتزاماتك وهدفك. نحوّل إجاباتك أولا إلى برومبت دقيق منظّم، ثم نولّد خطة أسبوعية بالمهام والساعات والبدائل — تحفظ على جهازك فقط.</p>
         <ul class="hero-points">
@@ -199,7 +199,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
         <ol class="mini-steps">
           <li><span class="dot">1</span><span><b>ظروف الحياة:</b> العمل، الوقت، الدخل، الالتزامات.</span></li>
           <li><span class="dot">2</span><span><b>الهدف والمدة:</b> ماذا تريد وخلال كم أسبوع.</span></li>
-          <li><span class="dot">3</span><span><b>البرومبت والخطة:</b> نص دقيق + جدول تنفيذ.</span></li>
+          <li><span class="dot">3</span><span><b>خطتك المحكمة:</b> جدول أسبوعي ومهام يومية وقواعد طوارئ.</span></li>
         </ol>
       </aside>
     </div>
@@ -209,7 +209,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     <div class="steps-bar" role="list">
       <div class="step-pill active" id="pill1" role="listitem"><strong>1</strong> ظروف الحياة</div>
       <div class="step-pill" id="pill2" role="listitem"><strong>2</strong> الهدف والمدة</div>
-      <div class="step-pill" id="pill3" role="listitem"><strong>3</strong> البرومبت والخطة</div>
+      <div class="step-pill" id="pill3" role="listitem"><strong>3</strong> خطتك المحكمة</div>
     </div>
 
     <div class="card">
@@ -313,21 +313,14 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
         <p class="error" id="err2"></p>
         <div class="form-nav">
           <button class="btn btn-ghost" id="back1">→ رجوع</button>
-          <button class="btn btn-primary" id="generate">ولّد البرومبت والخطة ←</button>
+          <button class="btn btn-primary" id="generate">ولّد خطتي المحكمة ←</button>
         </div>
       </fieldset>
 
       <!-- الخطوة 3 -->
       <fieldset id="step3" class="hidden">
-        <legend>ثالثا: البرومبت الدقيق + خطتك المحكمة</legend>
-        <div class="output-grid">
-          <div class="out-box">
-            <h3>البرومبت الدقيق <span class="tag">منطق promptify</span></h3>
-            <pre class="prompt" id="promptOut"></pre>
-            <div class="toolbar"><button class="btn btn-small" id="copyPrompt">نسخ البرومبت</button></div>
-          </div>
-          <div class="out-box plan" id="planOut" aria-live="polite"></div>
-        </div>
+        <legend>ثالثا: خطتك المحكمة حسب ظروفك</legend>
+        <div class="out-box plan" id="planOut" aria-live="polite"></div>
         <div class="toolbar">
           <button class="btn btn-small" id="copyPlan">نسخ الخطة نصا</button>
           <button class="btn btn-small" id="printBtn">طباعة / PDF</button>
@@ -408,60 +401,70 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     };
   }
 
-  // (ج) منطق promptify: فقرة ملخص + أقسام منظمة، بطول قريب من المدخلات، دون اختراع
-  function buildPrompt(d){
-    var duties=d.duties.length?d.duties.join("، "):"لا التزامات استثنائية مذكورة";
-    return "أنشئ خطة تنفيذية محكمة لشخص ظروفه كالتالي، مع الالتزام الكامل بهذه القيود دون اقتراح ما يخالفها.\n\n"
-    +"## السياق والقيود\n"
-    +"- الوضع المهني: "+d.job+"\n"
-    +"- الدخل: "+d.income+" | ميزانية الهدف: "+d.budget+"\n"
-    +"- الوقت المتاح: "+d.hours+" ساعة يوميا × "+d.days+" أيام أسبوعيا ("+(d.hours*d.days)+" ساعة أسبوعيا)\n"
-    +"- الالتزامات: "+duties+"\n"
-    +"- الطاقة: "+d.energy+" | بيئة التنفيذ: "+d.place+"\n\n"
-    +"## الهدف\n"
-    +"- النوع: "+(d.goals.join("، ")||"عام")+" | المستوى: "+d.level+"\n"
-    +"- الوصف: "+d.goal+"\n"
-    +"- المدة: "+d.weeks+" أسابيع | العائق الأكبر: "+d.obstacle+"\n\n"
-    +"## المطلوب في الخطة\n"
-    +"- جدول أسبوعي بالساعات، ومهام يومية لا تتجاوز "+d.hours+" ساعة\n"
-    +"- مؤشر قياس أسبوعي واحد يثبت التقدم\n"
-    +"- قاعدة طوارئ عند ضياع يوم كامل، وخطة بديلة منخفضة الطاقة\n"
-    +"- لغة عربية مباشرة، بلا حشو، وخطوات قابلة للتنفيذ من "+d.place;
+  // مولد الخطط — بُني بمنهجية البرومبتات الدقيقة (مواصفة صارمة من المدخلات، دون اختراع):
+  // كل فرع أدناه مشروط بقيمة مدخلة فعليا: الوقت، الطاقة، المهنة، الالتزامات، نوع الهدف، المستوى، الميزانية، العائق.
+  function dutyRule(x){
+    if(x==="أطفال")return "أطفال: جلسات قصيرة أثناء نومهم أو انشغالهم، ومهام صامتة قابلة للمقاطعة والاستئناف.";
+    if(x==="رعاية أهل")return "رعاية أهل: ثبّت الجلسة في أهدأ فترة، وجهّز قائمة مهام 15 دقيقة للأيام الطارئة.";
+    if(x==="مواصلات طويلة")return "مواصلات طويلة: حوّلها لوقت تعلم سمعي (تلخيصات/دروس صوتية)، والتطبيق العملي في البيت فقط.";
+    if(x==="دوام مسائي")return "دوام مسائي: الجلسة الأساسية صباحا قبل العمل، ولا جلسات بعد منتصف الليل.";
+    if(x==="التزامات اجتماعية كثيرة")return "التزامات اجتماعية: يوم عطلة واحد محمي أسبوعيا بلا مواعيد، وأعلن عنه مسبقا.";
+    return "إرهاق/صحة: نسخة 20 دقيقة هي الأساس لا الاستثناء، والتقدم البطيء المستمر يتفوق على الانقطاع.";
+  }
+  function obstaclePlan(o,h){
+    if(o==="ضيق الوقت")return "بروتوكول ضيق الوقت: قاعدة الدقيقتين لبدء أي جلسة، وتجميع المهام المتشابهة، وحذف مهمة واحدة أسبوعيا لا إضافتها.";
+    if(o==="التشتت وعدم الاستمرارية")return "بروتوكول التشتت: مؤقت "+(h>=2?"50":"25")+" دقيقة + هاتف في غرفة أخرى + مهمة واحدة مكتوبة قبل كل جلسة.";
+    if(o==="نقص المال")return "بروتوكول نقص المال: مصادر مجانية فقط، ومشروع تطبيقي واحد يغني عن أي دورة مدفوعة.";
+    if(o==="لا أعرف من أين أبدأ")return "بروتوكول البداية: أول 3 أيام خارطة طريق فقط (ماذا أتعلم بالترتيب)، ثم التزم بالتسلسل دون قفز.";
+    return "بروتوكول الإحباط: سقف توقع أسبوعي منخفض عمدا، وسجل انتصارات يومية من سطر واحد، ومراجعة شهرية لا يومية.";
+  }
+  function goalTrack(g){
+    if(g==="دخل إضافي / عمل")return {ph:["تأسيس المهارة القابلة للبيع","ملف أعمال من 3 نماذج حقيقية","عرض الخدمة على أول 10 عملاء محتملين"],day:"تعلم تقنية + تطبيقها على نموذج يصلح للبيع",kpi:"نموذج جديد في الملف أو عميل تم التواصل معه"};
+    if(g==="تعلم مهارة")return {ph:["الأساسيات والمصطلحات","مشاريع تطبيقية متدرجة","مشروع ختامي يعرض الإتقان"],day:"درس واحد + تمرين فوري عليه",kpi:"تمرين مكتمل أو مفهوم مشروح لغيرك"};
+    if(g==="دراسة / اختبار")return {ph:["مسح المنهج وتحديد الثغرات","مذاكرة نشطة وحل أسئلة","مراجعات واختبارات تجريبية موقوتة"],day:"حفظ/فهم + حل أسئلة على نفس الدرس",kpi:"درجة اختبار تجريبي أو عدد أسئلة محلولة"};
+    if(g==="صحة / لياقة")return {ph:["تثبيت العادة (مشي/نوم/أكل)","رفع الشدة تدريجيا","قياس وتثبيت النمط"],day:"تمرين + تسجيل (وزن/خطوات/نوم)",kpi:"رقم واحد يتحسن: خطوات أو وزن أو ساعات نوم"};
+    if(g==="تنظيم الديون")return {ph:["حصر الديون والمصاريف","خطة سداد + صندوق طوارئ صغير","أتمتة السداد ومنع ديون جديدة"],day:"مراجعة مصروف + تحويلة سداد",kpi:"إجمالي الدين المتبقي ينخفض أسبوعيا"};
+    return {ph:["دراسة جدوى مصغرة وأول نموذج","اختبار السوق بأقل تكلفة","أول عملية بيع وتوثيق الدرس"],day:"خطوة بناء + خطوة سوق (عرض/سؤال عميل)",kpi:"رد فعل سوق حقيقي مسجل"};
   }
 
   function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
 
   function buildPlan(d){
-    var weekly=d.hours*d.days;
+    var weekly=Math.round(d.hours*d.days*10)/10;
     var total=Math.round(weekly*d.weeks);
-    var focus=d.hours>=3?"جلسة عميقة واحدة + مراجعة":"جلستان قصيرتان (تعلم + تطبيق)";
-    var track=d.goals.join("، ")||"الهدف العام";
-    var phase=Math.max(2,Math.round(d.weeks/3));
-    var lowBudget=d.budget.indexOf("صفر")===0||d.budget.indexOf("مفتوحة")<0&&d.budget.indexOf("رمزية")===0;
-    var rows="";
-    var w1="تأسيس: "+(d.level==="مبتدئ تماما"?"أساسيات ومصطلحات من مصادر مجانية":"تثبيت الأساس وسد الفجوات");
-    var w2="بناء: إنتاج حقيقي (مشروع/ملف أعمال/اختبارات) بمعدل "+weekly+" ساعة أسبوعيا";
-    var w3="إطلاق وقياس: عرض النتيجة الأولى وتصحيح المسار";
-    rows+="<tr><td>1 – "+phase+"</td><td>"+esc(w1)+"</td><td>"+weekly+" س</td><td>إتمام الأساس دون تخطي</td></tr>";
-    rows+="<tr><td>"+(phase+1)+" – "+(phase*2)+"</td><td>"+esc(w2)+"</td><td>"+weekly+" س</td><td>مخرج واحد قابل للعرض</td></tr>";
-    rows+="<tr><td>"+(phase*2+1)+" – "+d.weeks+"</td><td>"+esc(w3)+"</td><td>"+weekly+" س</td><td>"+esc(track)+" متحقق جزئيا</td></tr>";
+    var g=d.goals[0]||"هدف عام";
+    var t=goalTrack(g);
+    var phase=Math.max(1,Math.round(d.weeks/3));
+    var p3start=phase*2+1; if(p3start>d.weeks){p3start=d.weeks}
 
-    var duties=d.duties.length?"<li><b>التكيف مع ظروفك ("+esc(d.duties.join("، "))+"):</b> ثبّت موعد الجلسة بعد أنشط وقت ("+esc(d.energy)+")، وجهّز نسخة 20 دقيقة للأيام المزدحمة.</li>":"<li><b>تثبيت العادة:</b> نفس الموعد يوميا في "+esc(d.place)+"، وهاتف صامت أثناء الجلسة.</li>";
+    var band=weekly<=7?"ضيق — الجودة على الكمية":(weekly<=20?"متوسط — إيقاع ثابت":"مريح — عمق وتوسع");
+    var slot="الفترة الذهبية: ";
+    if(d.energy==="مرتفعة صباحا")slot+="جلسة "+d.hours+" ساعة صباحا قبل أي التزام.";
+    else if(d.energy==="مرتفعة مساء")slot+="جلسة "+d.hours+" ساعة مساء، وجهّز كل شيء من النهار.";
+    else if(d.energy==="منخفضة معظم اليوم")slot+="قسّم الساعات لجلستين قصيرتين، وأصعب مهمة أولا مهما كانت قصيرة.";
+    else slot+="ثبّت موعدا واحدا يوميا لا يتغير، والطاقة تتبع العادة لا العكس.";
 
-    return "<h3>خطتك المحكمة — "+d.weeks+" أسابيع</h3>"
-    +'<div class="kpi"><div><b>'+weekly+' س</b><span>أسبوعيا</span></div><div><b>'+total+' س</b><span>إجمالي الخطة</span></div><div><b>'+d.days+' أيام</b><span>التزام أسبوعي</span></div></div>'
-    +"<h4>الوصفة اليومية ("+d.hours+" ساعة)</h4><ul>"
-    +"<li><b>النمط:</b> "+focus+".</li>"
-    +"<li><b>التوزيع:</b> 70% تطبيق عملي، 20% تعلم، 10% مراجعة وتوثيق.</li>"
-    +duties
-    +"<li><b>العائق ("+esc(d.obstacle)+"):</b> مؤقت 25 دقيقة + استراحة 5، ومنع الهاتف أول 50 دقيقة.</li></ul>"
-    +"<h4>المراحل</h4><table class='plan-table'><tr><th>الأسابيع</th><th>التركيز</th><th>الحمل</th><th>مؤشر النجاح</th></tr>"+rows+"</table>"
-    +"<h4>قواعد الطوارئ</h4><ul>"
-    +"<li>ضاع يوم؟ لا تعوّضه كله — أضف 30 دقيقة لليومين التاليين فقط.</li>"
-    +"<li>طاقة منخفضة؟ نفّذ نسخة 20 دقيقة: مراجعة + خطوة صغيرة واحدة.</li>"
-    +(lowBudget?"<li>ميزانية محدودة: مصادر مجانية فقط + أدوات "+esc(d.place)+" المتاحة.</li>":"<li>استثمر الميزانية في أصل واحد يسرّع النتيجة، لا في أدوات كثيرة.</li>")
-    +"</ul>"
-    +"<h4>قياس أسبوعي (10 دقائق كل جمعة)</h4><ul><li>ساعات منفذة مقابل "+weekly+"؟</li><li>مخرج واحد؟</li><li>ما العائق؟ وما إصلاح الأسبوع القادم؟</li></ul>";
+    var sess=d.hours<1?"جلسة واحدة مركزة ("+d.hours+" س): مهمة واحدة فقط + توثيق سطرين.":(d.hours<3?"جلستان: ("+Math.round(d.hours*40)+" د) "+t.day+" + ("+Math.round(d.hours*20)+" د) مراجعة وتوثيق.":"جلسة عميقة ("+Math.round(d.hours*60-20)+" د) "+t.day+" + (20 د) مراجعة.");
+
+    var jobNote={"موظف دوام كامل":"دوام كامل: لا تزد الأيام عن "+d.days+"، ويوم راحة كامل مقدس.","موظف دوام جزئي":"دوام جزئي: استغل أيام الفراغ للجلسات الأطول، وأيام العمل للنسخة القصيرة.","طالب":"طالب: اربط الخطة بموادك (مشروع يخدم دراستك) لتضرب عصفورين.","عمل حر":"عمل حر: أول ساعة من يوم العمل للخطة قبل طلبات العملاء.","عاطل / باحث عن عمل":"باحث عن عمل: الخطة هي وظيفتك المؤقتة — التزم بتوقيت ثابت كأنها دوام.","ربة منزل":"إدارة بيت: الجلسة في أهدأ فترات البيت، ومهام قابلة للتوقف والاستئناف."}[d.job];
+
+    var dutHtml=d.duties.length?d.duties.map(function(x){return "<li>"+esc(dutyRule(x))+"</li>"}).join(""):"<li>لا التزامات استثنائية: التحدي هو الاستمرارية لا الوقت — التزم بنفس الموعد يوميا في "+esc(d.place)+".</li>";
+
+    var lvl=d.level==="مبتدئ تماما"?"مبتدئ: أول "+phase+" أسابيع أساسيات فقط — ممنوع القفز للمتقدم.":(d.level==="عندي أساسيات"?"أساسيات موجودة: اختبار تحديد مستوى أول يومين ثم سد الفجوات فقط.":"متوسط: تخطَّ الأساسيات — ابدأ من مشاريع المستوى الأعلى مباشرة.");
+    var bud=d.budget.indexOf("صفر")===0?"ميزانية صفر: كل المصادر مجانية، والأدوات المتاحة في "+esc(d.place)+" فقط — وهذا كافٍ.":(d.budget.indexOf("رمزية")===0?"ميزانية رمزية: استثمار واحد فقط في أصل يسرّع النتيجة، والباقي مجاني.":(d.budget.indexOf("متوسطة")===0?"ميزانية متوسطة: وزعها على أصلين كحد أقصى، ولا تشترِ قبل إنهاء المرحلة الأولى.":"ميزانية مفتوحة: حتى مع الوفرة — أداة واحدة لكل مرحلة، وكثرة الأدوات عدو الإنجاز."));
+
+    return "<h3>خطتك: "+esc(d.goal)+"</h3>"
+    +'<div class="kpi"><div><b>'+weekly+' س</b><span>أسبوعيا · '+band+'</span></div><div><b>'+total+' س</b><span>إجمالي '+d.weeks+' أسابيع</span></div><div><b>'+d.days+' أيام</b><span>التزام أسبوعي</span></div></div>'
+    +"<h4>يومك التنفيذي ("+d.hours+" ساعة)</h4><ul><li>"+sess+"</li><li>"+slot+"</li><li>"+esc(jobNote)+"</li></ul>"
+    +"<h4>ظروفك بعين الاعتبار</h4><ul>"+dutHtml+"<li>"+esc(lvl)+"</li><li>"+bud+"</li></ul>"
+    +"<h4>المراحل — مسار "+esc(g)+"</h4><table class='plan-table'><tr><th>الأسابيع</th><th>التركيز</th><th>الحمل</th><th>مؤشر النجاح</th></tr>"
+    +"<tr><td>1 – "+phase+"</td><td>"+esc(t.ph[0])+"</td><td>"+weekly+" س</td><td>الأساس مكتمل دون تخطي</td></tr>"
+    +"<tr><td>"+(phase+1)+" – "+(phase*2)+"</td><td>"+esc(t.ph[1])+"</td><td>"+weekly+" س</td><td>"+esc(t.kpi)+"</td></tr>"
+    +"<tr><td>"+p3start+" – "+d.weeks+"</td><td>"+esc(t.ph[2])+"</td><td>"+weekly+" س</td><td>هدفك ("+esc(d.goal)+") متحقق جزئيا وموثق</td></tr></table>"
+    +"<h4>عائقك الأكبر: "+esc(d.obstacle)+"</h4><ul><li>"+esc(obstaclePlan(d.obstacle,d.hours))+"</li>"
+    +"<li>ضاع يوم كامل؟ لا تعوّضه دفعة واحدة — وزّعه 30 دقيقة على اليومين التاليين فقط.</li>"
+    +"<li>يوم بلا طاقة؟ نسخة 20 دقيقة: مراجعة سريعة + خطوة واحدة صغيرة، وتُحتسب يوما منجزا.</li></ul>"
+    +"<h4>المراجعة الأسبوعية (10 دقائق)</h4><ul><li>ساعات منفذة مقابل "+weekly+"؟</li><li>"+esc(t.kpi)+" — تحقق؟</li><li>عائق الأسبوع؟ وإصلاح واحد للأسبوع القادم.</li></ul>";
   }
 
   function planText(d){
@@ -472,21 +475,18 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     var d=data();
     if(d.goal.length<10){$("err2").textContent="صف هدفك بجملة واضحة (10 أحرف على الأقل).";return}
     $("err2").textContent="";
-    var p=buildPrompt(d);
-    $("promptOut").textContent=p;
     $("planOut").innerHTML=buildPlan(d);
-    try{localStorage.setItem("masar-data",JSON.stringify(d));localStorage.setItem("masar-prompt",p)}catch(e){}
+    try{localStorage.setItem("masar-data",JSON.stringify(d))}catch(e){}
     show(3);
   });
 
-  $("copyPrompt").addEventListener("click",function(){copy($("promptOut").textContent,"تم نسخ البرومبت")});
   $("copyPlan").addEventListener("click",function(){copy(planText(),"تم نسخ الخطة")});
   function copy(t,msg){
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast(msg)},function(){fallback()})}
     else fallback();
     function fallback(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){}ta.remove()}
   }
-  function toast(m){var b=$("copyPrompt");var old=b.textContent;b.textContent=m;setTimeout(function(){b.textContent=old},1500)}
+  function toast(m){var b=$("copyPlan");var old=b.textContent;b.textContent=m;setTimeout(function(){b.textContent=old},1500)}
   $("printBtn").addEventListener("click",function(){window.print()});
 
   // استعادة محفوظة
