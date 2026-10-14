@@ -148,9 +148,14 @@ input[type="range"]{accent-color:var(--accent);padding:0;border:0;background:tra
 .form-nav{display:flex;gap:.7rem;justify-content:space-between;flex-wrap:wrap;margin-top:1rem}
 .error{color:var(--danger);font-size:.88rem;min-height:1.5em;margin:.4rem 0 0}
 .warn-box{background:var(--gold-soft);border:1px solid var(--gold);border-radius:var(--r-md);padding:.7rem 1rem;font-size:.9rem;margin-top:.8rem}
-.jumpbar{position:sticky;top:64px;z-index:10;display:flex;gap:.5rem;flex-wrap:wrap;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:var(--r-full);padding:.45rem .7rem;margin-bottom:1rem}
-.jumpbar a{font-size:.82rem;text-decoration:none;border:1px solid var(--border);border-radius:var(--r-full);padding:.2rem .8rem;background:var(--bg)}
-.jumpbar a:hover{border-color:var(--accent)}
+details.task-sec summary{cursor:pointer;list-style:none}
+details.task-sec summary::-webkit-details-marker{display:none}
+details.task-sec summary:hover .sec-num{transform:scale(1.05)}
+.check-list{list-style:none!important;padding-inline-start:0!important}
+.check-list li{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.5rem .8rem;margin-bottom:.5rem}
+.check-list label{display:flex;gap:.7rem;align-items:flex-start;cursor:pointer;font-weight:400}
+.check-list input{width:1.25rem;height:1.25rem;accent-color:var(--accent);flex:none;margin-top:.3rem}
+.check-list input:checked+span{text-decoration:line-through;opacity:.6}
 .task-sec{scroll-margin-top:130px}
 .sec-head{display:flex;align-items:center;gap:.7rem;margin:0 0 .6rem}
 .sec-num{width:34px;height:34px;border-radius:10px;background:var(--text-hi);color:var(--bg);display:grid;place-items:center;font-weight:700;flex:none}
@@ -196,7 +201,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:375px){.wrap{padding-inline:.8rem}.card{padding:1rem}.kpi{grid-template-columns:1fr}}
 @media print{
-  .site-header,.hero,.steps-bar,.toolbar,.form-nav,.jumpbar,.skip,
+  .site-header,.hero,.steps-bar,.toolbar,.form-nav,.skip,
   #sec-today,#sec-stats,#sec-track,#sec-int,#sec-settings{display:none!important}
   body::before{display:none}
   .card{box-shadow:none}
@@ -337,13 +342,13 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
             <button type="button" class="chip" aria-pressed="false">مشكلة صحية / إرهاق</button>
           </div>
         </div>
-        <div class="field" style="margin-top:1rem">
-          <label data-i18n="faithL">اعتبارات دينية واجتماعية (اختياري)</label>
-          <div class="chips" id="faithChips">
+        <details class="out-box" style="margin-top:1rem">
+          <summary style="font-weight:700;cursor:pointer" data-i18n="faithL">اعتبارات دينية واجتماعية (اختياري)</summary>
+          <div class="chips" id="faithChips" style="margin-top:.6rem">
             <button type="button" class="chip" aria-pressed="false">مراعاة أوقات الصلاة</button>
             <button type="button" class="chip" aria-pressed="false">الصيام (رمضان أو تطوع)</button>
           </div>
-        </div>
+        </details>
         <div class="grid2" style="margin-top:1rem">
           <div class="field">
             <label for="energy" data-i18n="energyL">مستوى طاقتك غالبا</label>
@@ -403,12 +408,15 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
             <select id="obstacle"><option>ضيق الوقت</option><option selected>التشتت وعدم الاستمرارية</option><option>نقص المال</option><option>لا أعرف من أين أبدأ</option><option>الإحباط السريع</option></select>
           </div>
         </div>
-        <div class="field" style="margin-top:1rem">
-          <label for="goal2" data-i18n="goal2L">هدف ثانوي (اختياري — يأخذ حصة من وقتك)</label>
+        <details class="out-box" style="margin-top:1rem">
+          <summary style="font-weight:700;cursor:pointer" data-i18n="goal2L">هدف ثانوي (اختياري — يأخذ حصة من وقتك)</summary>
+          <div class="field" style="margin-top:.6rem">
+          <label for="goal2" data-i18n="goal2Sub">اكتبه هنا:</label>
           <textarea id="goal2" style="min-height:60px" placeholder="مثال: المشي 20 دقيقة يوميا..."></textarea>
           <label for="share" style="margin-top:.6rem"><span data-i18n="shareL">حصة الهدف الثانوي:</span> <span class="range-val" id="shareVal">20%</span></label>
           <div class="range-row"><input type="range" id="share" min="10" max="40" step="5" value="20"></div>
-        </div>
+          </div>
+        </details>
         <p class="error" id="err2"></p>
         <div class="form-nav">
           <button class="btn btn-ghost" id="back1" data-i18n="backBtn">→ رجوع</button>
@@ -419,14 +427,6 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       <!-- القسم 3: أقسام المهام -->
       <fieldset id="step3" class="hidden">
         <legend data-i18n="leg3">ثالثا: خطتك المحكمة حسب ظروفك</legend>
-        <nav class="jumpbar" aria-label="أقسام الخطة">
-          <a href="#sec-plan" data-i18n="j1">الخطة</a>
-          <a href="#sec-today" data-i18n="j2">جلسة اليوم</a>
-          <a href="#sec-stats" data-i18n="j3">الإحصائيات</a>
-          <a href="#sec-track" data-i18n="j4">المتابعة</a>
-          <a href="#sec-int" data-i18n="j5">التكاملات</a>
-          <a href="#sec-settings" data-i18n="j6">الإعدادات</a>
-        </nav>
 
         <section class="task-sec" id="sec-plan" aria-labelledby="h-plan">
           <div class="sec-head"><span class="sec-num">1</span><div><h3 id="h-plan" data-i18n="secPlanT">قسم الخطة المحكمة</h3><p data-i18n="secPlanD">الجدول والمراحل وقواعد الطوارئ حسب ظروفك.</p></div></div>
@@ -443,14 +443,14 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
               <button class="btn btn-small" id="timerPause" data-i18n="tPause">إيقاف مؤقت</button>
               <button class="btn btn-small" id="timerReset" data-i18n="tReset">تصفير</button>
               <button class="btn btn-small" id="doneToday" data-i18n="tDone">أنجزت جلسة اليوم ✓</button>
+            <button class="btn btn-small btn-ghost" id="undoToday" data-i18n="tUndo">تراجع عن اليوم</button>
               <button class="btn btn-small btn-ghost" id="remindBtn" data-i18n="tRemind">تذكير يومي</button>
             </div>
           </div>
         </section>
 
-        <section class="task-sec" id="sec-stats" aria-labelledby="h-stats">
-          <div class="sec-head"><span class="sec-num">3</span><div><h3 id="h-stats" data-i18n="statsT">قسم الإحصائيات والخطط السابقة</h3><p data-i18n="secStatsD">تقدمك وأرشيف خططك.</p></div></div>
-          <div class="out-box">
+        <details class="task-sec out-box" id="sec-stats" aria-labelledby="h-stats">
+          <summary class="sec-head"><span class="sec-num">3</span><div><h3 id="h-stats" data-i18n="statsT">قسم الإحصائيات والخطط السابقة</h3><p data-i18n="secStatsD">تقدمك وأرشيف خططك.</p></div></summary>
             <div class="stats-grid">
               <div><b id="stStreak">0</b><span data-i18n="st1">أيام متتالية</span></div>
               <div><b id="stSessions">0</b><span data-i18n="st2">جلسات منجزة</span></div>
@@ -462,8 +462,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
               <select id="histSel" style="max-width:280px"><option value="" data-i18n="histNone">لا يوجد بعد</option></select>
               <button class="btn btn-small btn-ghost" id="histRestore" data-i18n="histR">استرجاع</button>
             </div>
-          </div>
-        </section>
+        </details>
 
         <section class="task-sec" id="sec-track" aria-labelledby="h-track">
           <div class="sec-head"><span class="sec-num">4</span><div><h3 id="h-track" data-i18n="trackT">قسم المتابعة وإعادة التخطيط</h3><p data-i18n="secTrackD">حدّث حالة كل أسبوع وأعد التخطيط عند التعثر.</p></div></div>
@@ -478,9 +477,8 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
           </div>
         </section>
 
-        <section class="task-sec" id="sec-int" aria-labelledby="h-int">
-          <div class="sec-head"><span class="sec-num">5</span><div><h3 id="h-int" data-i18n="intT">قسم التكاملات والتصدير</h3><p data-i18n="secIntD">التقويم والمشاركة والنسخ الاحتياطي والطباعة.</p></div></div>
-          <div class="out-box">
+        <details class="task-sec out-box" id="sec-int" aria-labelledby="h-int">
+          <summary class="sec-head"><span class="sec-num">5</span><div><h3 id="h-int" data-i18n="intT">قسم التكاملات والتصدير</h3><p data-i18n="secIntD">التقويم والمشاركة والنسخ الاحتياطي والطباعة.</p></div></summary>
             <div class="toolbar">
               <button class="btn btn-small" id="icsBtn" data-i18n="bIcs">تنزيل للتقويم (.ics)</button>
               <button class="btn btn-small" id="txtBtn" data-i18n="bTxt">تنزيل نص الخطة (.txt)</button>
@@ -493,8 +491,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
               <button class="btn btn-small btn-ghost" id="restart" data-i18n="bRestart">البدء من جديد</button>
             </div>
             <p class="hint" data-i18n="intH">ملف التقويم يضيف جلسة أسبوعية متكررة بمدة جلستك اليومية. النسخة الاحتياطية تنقل خطتك لجهاز آخر.</p>
-          </div>
-        </section>
+        </details>
         <div class="form-nav"><button class="btn btn-ghost" id="back2" data-i18n="editBtn">→ تعديل المدخلات</button><span></span></div>
       </fieldset>
     </div>
@@ -672,6 +669,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     levelL:{ar:"مستواك الحالي",en:"Your current level"},
     obstacleL:{ar:"أكبر عائق تتوقعه",en:"Biggest expected obstacle"},
     goal2L:{ar:"هدف ثانوي (اختياري — يأخذ حصة من وقتك)",en:"Secondary goal (optional — takes a share of time)"},
+    goal2Sub:{ar:"اكتبه هنا:",en:"Write it here:"},
     shareL:{ar:"حصة الهدف الثانوي:",en:"Secondary goal share:"},
     backBtn:{ar:"→ رجوع",en:"→ Back"},
     genBtn:{ar:"ولّد خطتي المحكمة ←",en:"Generate my tight plan →"},
@@ -680,6 +678,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     tPause:{ar:"إيقاف مؤقت",en:"Pause"},
     tReset:{ar:"تصفير",en:"Reset"},
     tDone:{ar:"أنجزت جلسة اليوم ✓",en:"Done today's session ✓"},
+    tUndo:{ar:"تراجع عن اليوم",en:"Undo today"},
     tRemind:{ar:"تذكير يومي",en:"Daily reminder"},
     statsT:{ar:"قسم الإحصائيات والخطط السابقة",en:"Stats and past plans section"},
     st1:{ar:"أيام متتالية",en:"Day streak"},
@@ -892,6 +891,30 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   }
 
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+  var AR_DAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  function fmtDate(dt){return dt.getDate()+"/"+(dt.getMonth()+1)}
+  function planStart(){var s=new Date();s.setDate(s.getDate()+1);s.setHours(0,0,0,0);return s}
+  function rangeStr(start,a,b){var x=new Date(start);x.setDate(x.getDate()+a);var y=new Date(start);y.setDate(y.getDate()+b);return fmtDate(x)+" – "+fmtDate(y)}
+  function sessionDayNames(d){
+    var order=d.weekend==="السبت – الأحد"?[0,1,2,3,4,5,6]:[6,0,1,2,3,4,5];
+    return order.slice(0,Math.min(d.days,7)).map(function(i){return AR_DAYS[i]}).join("، ");
+  }
+  function tasks(){try{var x=JSON.parse(localStorage.getItem("masar-tasks")||"null");if(x&&x.n)return x}catch(e){}return {n:0,checks:[]}}
+  function saveTasks(x){try{localStorage.setItem("masar-tasks",JSON.stringify(x))}catch(e){}}
+  function week1Items(d,t,names){
+    var kinds=["ابدأ: "+t.day,"طبّق على مهمة صغيرة وسجّل النتيجة: "+t.kpi,"راجع ما أنجزته وجهّز الغد"];
+    return names.map(function(nm,i){return {day:nm,text:kinds[i%3]}});
+  }
+  function week1Html(d,t){
+    var names=sessionDayNames(d).split("، ");
+    var items=week1Items(d,t,names);
+    var st=tasks();
+    var lis=items.map(function(it,i){
+      var on=st.checks&&st.checks[i]?true:false;
+      return "<li><label><input type='checkbox' data-tk='"+i+"'"+(on?" checked":"")+"><span><b>"+esc(it.day)+":</b> "+esc(it.text)+"</span></label></li>";
+    }).join("");
+    return "<h4>الأسبوع الأول يوما بيوم (يبدأ "+fmtDate(planStart())+")</h4><ul class='check-list'>"+lis+"</ul>";
+  }
   function reviewDay(w){return w==="السبت – الأحد"?"الجمعة":(w==="الجمعة – السبت"?"الخميس":"يوم عطلتك")}
   function sessionHour(e){return e==="مرتفعة صباحا"?7:(e==="مرتفعة مساء"?19:18)}
 
@@ -914,6 +937,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     var phase=Math.max(1,Math.round(d.weeks/3));
     var p3start=phase*2+1; if(p3start>d.weeks){p3start=d.weeks}
     var rd=reviewDay(d.weekend);
+    var start=planStart();
 
     var band=weekly<=7?"ضيق — الجودة على الكمية":(weekly<=20?"متوسط — إيقاع ثابت":"مريح — عمق وتوسع");
     var slot;
@@ -938,16 +962,17 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
 
     return "<h3>خطتك: "+esc(d.goal)+"</h3>"
     +'<div class="kpi"><div><b>'+weekly+' س</b><span>أسبوعيا · '+band+'</span></div><div><b>'+total+' س</b><span>إجمالي '+d.weeks+' أسابيع</span></div><div><b>'+d.days+' أيام</b><span>التزام أسبوعي</span></div></div>'
-    +"<h4>يومك التنفيذي ("+d.hours+" ساعة)</h4><ul><li>"+sess+"</li><li><b>الفترة الذهبية:</b> "+slot+"</li><li>"+esc(jobNote)+"</li>"+second+"</ul>"
+    +"<h4>يومك التنفيذي ("+d.hours+" ساعة)</h4><ul><li>"+sess+"</li><li><b>الفترة الذهبية:</b> "+slot+"</li><li>"+esc(jobNote)+"</li><li><b>أيام جلساتك:</b> "+esc(sessionDayNames(d))+".</li><li><b>إجمالي الجلسات:</b> "+(d.weeks*d.days)+" جلسة × "+d.hours+" س = "+total+" س.</li>"+second+"</ul>"
     +"<h4>ظروفك بعين الاعتبار</h4><ul>"+items+"<li>"+esc(lvl)+"</li><li>"+bud+"</li></ul>"
     +"<h4>المراحل — مسار "+esc(g)+"</h4><table class='plan-table'><tr><th>الأسابيع</th><th>التركيز</th><th>الحمل</th><th>مؤشر النجاح</th></tr>"
-    +"<tr><td>1 – "+phase+"</td><td>"+esc(t.ph[0])+"</td><td>"+weeklyMain+" س</td><td>الأساس مكتمل دون تخطي</td></tr>"
-    +"<tr><td>"+(phase+1)+" – "+(phase*2)+"</td><td>"+esc(t.ph[1])+"</td><td>"+weeklyMain+" س</td><td>"+esc(t.kpi)+"</td></tr>"
-    +"<tr><td>"+p3start+" – "+d.weeks+"</td><td>"+esc(t.ph[2])+"</td><td>"+weeklyMain+" س</td><td>هدفك متحقق جزئيا وموثق</td></tr></table>"
+    +"<tr><td>1 – "+phase+"<br><small>"+rangeStr(start,0,phase*7-1)+"</small></td><td>"+esc(t.ph[0])+"</td><td>"+weeklyMain+" س</td><td>الأساس مكتمل دون تخطي</td></tr>"
+    +"<tr><td>"+(phase+1)+" – "+(phase*2)+"<br><small>"+rangeStr(start,phase*7,phase*14-1)+"</small></td><td>"+esc(t.ph[1])+"</td><td>"+weeklyMain+" س</td><td>"+esc(t.kpi)+"</td></tr>"
+    +"<tr><td>"+p3start+" – "+d.weeks+"<br><small>"+rangeStr(start,phase*14,d.weeks*7-1)+"</small></td><td>"+esc(t.ph[2])+"</td><td>"+weeklyMain+" س</td><td>هدفك متحقق جزئيا وموثق</td></tr></table>"
     +"<h4>عائقك الأكبر: "+esc(d.obstacle)+"</h4><ul><li>"+esc(obstaclePlan(d.obstacle,d.hours))+"</li>"
     +"<li>ضاع يوم كامل؟ لا تعوّضه دفعة واحدة — وزّعه 30 دقيقة على اليومين التاليين فقط.</li>"
     +"<li>يوم بلا طاقة؟ نسخة 20 دقيقة: مراجعة سريعة + خطوة واحدة صغيرة، وتُحتسب يوما منجزا.</li></ul>"
     +firstDayList(d,t)
+    +week1Html(d,t)
     +"<h4>المراجعة الأسبوعية ("+rd+" — 10 دقائق)</h4><ul><li>ساعات منفذة مقابل "+weekly+"؟</li><li>"+esc(t.kpi)+" — تحقق؟</li><li>عائق الأسبوع؟ وإصلاح واحد للأسبوع القادم.</li></ul>";
   }
 
@@ -1024,6 +1049,15 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     logSession(d?Math.round(d.hours*60):25);
     notify("أحسنت ✓","سُجّلت جلسة اليوم في إحصائياتك.");
   });
+  $("undoToday").addEventListener("click",function(){
+    var l=log(),k=dayKey(new Date());
+    if(l[k]){delete l[k];saveLog(l);renderStats();notify("تم","حُذف تسجيل اليوم.")}
+    else{notify("تنبيه","لا يوجد تسجيل لليوم للتراجع عنه.")}
+  });
+  $("planOut").addEventListener("change",function(e){
+    var cb=e.target.closest?e.target.closest("input[data-tk]"):null;if(!cb)return;
+    var st=tasks();st.checks[parseInt(cb.getAttribute("data-tk"),10)]=cb.checked;saveTasks(st);
+  });
 
   function notify(title,body){
     try{
@@ -1088,13 +1122,19 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     restoreForm(d);
     $("planOut").innerHTML=buildPlan(d);updateTodayDesc();
     var t=track();if(t.weeks!==d.weeks){t={weeks:d.weeks,states:[]};for(var j=0;j<d.weeks;j++)t.states.push(0);saveTrack(t)}
+    var _tk2=[];for(var _j=0;_j<Math.min(d.days||5,7);_j++)_tk2.push(false);saveTasks({n:d.days||5,checks:_tk2});
     renderTrack();resetTimer();show(3);
   });
 
   $("generate").addEventListener("click",function(){
     var d=data();
     if(d.goal.length<10){$("err2").textContent="صف هدفك بجملة واضحة (10 أحرف على الأقل).";return}
+    var _t0=track();
+    if(_t0.states.some(function(s){return s!==0})){
+      if(!window.confirm(lang==="ar"?"لديك تقدم مسجل — التوليد الجديد سيصفّر المتابعة. متأكد؟":"You have tracked progress — regenerating resets it. Continue?"))return;
+    }
     $("err2").textContent="";
+    var _tk=[];for(var _i=0;_i<Math.min(d.days,7);_i++)_tk.push(false);saveTasks({n:d.days,checks:_tk});
     $("planOut").innerHTML=buildPlan(d);
     try{localStorage.setItem("masar-data",JSON.stringify(d))}catch(e){}
     var h=hist();h.unshift({date:new Date().toLocaleDateString(lang==="ar"?"ar":"en"),goal:d.goal,weeks:d.weeks,data:d});saveHist(h);renderHist();
@@ -1187,7 +1227,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   // بياناتي: تنزيل الكل / استيراد الكل / مسح
   function allData(){
     var o={settings:settings(),exportedAt:new Date().toISOString()};
-    ["masar-data","masar-track","masar-log","masar-history","masar-lang","masar-remind"].forEach(function(k){
+    ["masar-data","masar-track","masar-tasks","masar-log","masar-history","masar-lang","masar-remind"].forEach(function(k){
       try{o[k]=JSON.parse(localStorage.getItem(k)||"null")}catch(e){o[k]=localStorage.getItem(k)}
     });
     return o;
@@ -1201,7 +1241,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       try{
         var p=JSON.parse(r.result);
         if(p.settings){saveSettings(Object.assign({},DEF_SET,p.settings));applySettings()}
-        ["masar-data","masar-track","masar-log","masar-history","masar-lang"].forEach(function(k){
+        ["masar-data","masar-track","masar-tasks","masar-log","masar-history","masar-lang"].forEach(function(k){
           if(p[k]!==undefined&&p[k]!==null)localStorage.setItem(k,JSON.stringify(p[k]));
         });
         if(p["masar-data"]){restoreForm(p["masar-data"]);$("planOut").innerHTML=buildPlan(p["masar-data"]);renderTrack();renderStats();updateTodayDesc();resetTimer();show(3)}
@@ -1213,7 +1253,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   $("wipeAll").addEventListener("click",function(){
     var ok=window.confirm(lang==="ar"?"سيُمسح كل شيء (الخطة والمتابعة والإحصائيات والإعدادات). متأكد؟":"Erase everything (plan, tracking, stats, settings)?");
     if(!ok)return;
-    ["masar-data","masar-track","masar-log","masar-history","masar-settings","masar-remind","masar-reminded"].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
+    ["masar-data","masar-track","masar-tasks","masar-log","masar-history","masar-settings","masar-remind","masar-reminded"].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
     location.reload();
   });
 
