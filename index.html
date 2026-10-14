@@ -221,6 +221,41 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   .card{box-shadow:none}
   #step3{display:block!important}
 }
+/* ===== v8: طبقة البساطة — تبسيط الشكل الكامل دون مساس بالوظائف ===== */
+:root{--shadow-sm:none;--shadow-md:none}
+body::before{display:none}
+.wrap{max-width:720px}
+.site-header .brand small{display:none}
+.hero{padding:2rem 0 1rem}
+h1{font-size:clamp(1.55rem,4.5vw,2.1rem);margin:.7rem 0 .5rem}
+.hero p.lead{font-size:1rem}
+.hero-points li:nth-child(n+4){display:none}
+.trust-card{box-shadow:none}
+.mini-steps li{font-size:.85rem}
+.tpl-strip{box-shadow:none;padding:.85rem 1rem}
+.tpl-strip h2{font-size:.92rem}
+.builder{padding:1rem 0 2.5rem}
+.card{box-shadow:none;border-radius:16px}
+.steps-bar{gap:.35rem}
+.step-pill{min-width:0;padding:.45rem .6rem;font-size:.8rem;border-radius:10px}
+.step-pill strong{display:none}
+.step-pill.active{box-shadow:none}
+.mini-group{background:transparent;border:0;border-top:1px solid var(--border);border-radius:0;padding:1.1rem 0;margin-bottom:.4rem}
+.mini-group:first-of-type{border-top:0;padding-top:.2rem}
+.gnum{width:26px;height:26px;font-size:.85rem;border-radius:8px}
+legend{font-size:1.02rem}
+.out-box{border-style:solid;background:var(--surface)}
+.today-card{border-width:1px;box-shadow:none}
+.toolbar{gap:.45rem}
+.btn{padding:.6rem 1.1rem}
+@media(max-width:640px){
+  .form-nav .btn{flex:1;justify-content:center}
+  .nav-actions{flex-wrap:wrap;justify-content:flex-end}
+  .nav-actions .btn-small{padding:.35rem .7rem;font-size:.78rem}
+}
+table.plan-table{font-size:.82rem}
+.kpi b{font-size:1.05rem}
+footer{text-align:center;font-size:.8rem}
 </style>
 </head>
 <body>
@@ -799,7 +834,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     dExp:{ar:"تنزيل كل بياناتي",en:"Download all my data"},
     dImp:{ar:"استيراد",en:"Import"},
     dWipe:{ar:"مسح كل شيء",en:"Erase everything"},
-    footer:{ar:"مَسار v4 — يعمل دون خادم ودون اتصال بعد أول تحميل. بياناتك لا تغادر متصفحك. صُمم Mobile-First ويحترم تقليل الحركة.",en:"Masar v4 — no server, works offline after first load. Your data never leaves your browser."}
+    footer:{ar:"مَسار v8 — يعمل دون خادم ودون اتصال بعد أول تحميل. بياناتك لا تغادر متصفحك.",en:"Masar v8 — no server, works offline after first load. Your data never leaves your browser."}
   };
   var lang="ar";
   try{lang=localStorage.getItem("masar-lang")||"ar"}catch(e){}
