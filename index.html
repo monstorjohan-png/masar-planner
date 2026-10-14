@@ -9,6 +9,8 @@
 <meta property="og:title" content="مَسار — خطط محكمة من ظروف حياتك">
 <meta property="og:description" content="حوّل وقتك ودخلك والتزاماتك إلى خطة أسبوعية قابلة للتنفيذ. مجاني ويحفظ بياناتك على جهازك.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://monstorjohan-png.github.io/masar-planner/icon.svg">
+<meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://monstorjohan-png.github.io/masar-planner/">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
@@ -156,6 +158,10 @@ details.task-sec summary:hover .sec-num{transform:scale(1.05)}
 .check-list label{display:flex;gap:.7rem;align-items:flex-start;cursor:pointer;font-weight:400}
 .check-list input{width:1.25rem;height:1.25rem;accent-color:var(--accent);flex:none;margin-top:.3rem}
 .check-list input:checked+span{text-decoration:line-through;opacity:.6}
+.bars{display:flex;gap:.4rem;align-items:flex-end;height:110px;margin:.4rem 0}
+.bar-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.7rem;color:var(--muted);height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:34px;background:linear-gradient(180deg,var(--accent),var(--gold));border-radius:6px 6px 2px 2px;min-height:4px}
+.bar-v{font-weight:700;color:var(--text);font-size:.72rem;min-height:1em}
 .task-sec{scroll-margin-top:130px}
 .sec-head{display:flex;align-items:center;gap:.7rem;margin:0 0 .6rem}
 .sec-num{width:34px;height:34px;border-radius:10px;background:var(--text-hi);color:var(--bg);display:grid;place-items:center;font-weight:700;flex:none}
@@ -396,6 +402,11 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
             <div class="range-row"><input type="range" id="weeks" min="2" max="24" step="1" value="8"></div>
           </div>
           <div class="field">
+            <label for="target" data-i18n="targetL">تاريخ مستهدف (اختياري):</label>
+            <input type="date" id="target">
+            <span class="hint" data-i18n="targetH">اختر تاريخا وسنحسب المدة تلقائيا.</span>
+          </div>
+          <div class="field">
             <label for="budget" data-i18n="budgetL">ميزانية متاحة للهدف</label>
             <select id="budget"><option selected>صفر — مجاني فقط</option><option>رمزية أقل من 50$</option><option>متوسطة حتى 300$</option><option>مفتوحة</option></select>
           </div>
@@ -457,6 +468,8 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
               <div><b id="stMinutes">0</b><span data-i18n="st3">دقائق التركيز</span></div>
               <div><b id="stProgress">0%</b><span data-i18n="st4">تقدم الأسابيع</span></div>
             </div>
+            <h4 style="margin:.8rem 0 .3rem;font-size:.95rem" data-i18n="chartT">آخر 7 أيام (دقائق التركيز)</h4>
+            <div class="bars" id="weekChart" role="img" aria-label="رسم دقائق التركيز لآخر 7 أيام"></div>
             <div class="hist-row">
               <label for="histSel" style="font-size:.9rem" data-i18n="histL">خطط سابقة:</label>
               <select id="histSel" style="max-width:280px"><option value="" data-i18n="histNone">لا يوجد بعد</option></select>
@@ -483,6 +496,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
               <button class="btn btn-small" id="icsBtn" data-i18n="bIcs">تنزيل للتقويم (.ics)</button>
               <button class="btn btn-small" id="txtBtn" data-i18n="bTxt">تنزيل نص الخطة (.txt)</button>
               <button class="btn btn-small" id="shareBtn" data-i18n="bShare">مشاركة الخطة</button>
+              <button class="btn btn-small" id="linkBtn" data-i18n="bLink">نسخ رابط الخطة</button>
               <button class="btn btn-small" id="jsonBtn" data-i18n="bJson">تنزيل نسخة احتياطية</button>
               <button class="btn btn-small" id="importBtn" data-i18n="bImp">استيراد نسخة</button>
               <input type="file" id="importFile" accept="application/json" class="hidden" aria-label="ملف النسخة الاحتياطية">
@@ -665,6 +679,8 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     goalTypeL:{ar:"نوع الهدف الأساسي",en:"Primary goal type"},
     goalL:{ar:"صف هدفك بجملة واقعية",en:"Describe your goal realistically"},
     weeksL:{ar:"المدة:",en:"Duration:"},
+    targetL:{ar:"تاريخ مستهدف (اختياري):",en:"Target date (optional):"},
+    targetH:{ar:"اختر تاريخا وسنحسب المدة تلقائيا.",en:"Pick a date and we compute the weeks."},
     budgetL:{ar:"ميزانية متاحة للهدف",en:"Budget for the goal"},
     levelL:{ar:"مستواك الحالي",en:"Your current level"},
     obstacleL:{ar:"أكبر عائق تتوقعه",en:"Biggest expected obstacle"},
@@ -685,6 +701,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     st2:{ar:"جلسات منجزة",en:"Sessions done"},
     st3:{ar:"دقائق التركيز",en:"Focus minutes"},
     st4:{ar:"تقدم الأسابيع",en:"Weeks progress"},
+    chartT:{ar:"آخر 7 أيام (دقائق التركيز)",en:"Last 7 days (focus minutes)"},
     histL:{ar:"خطط سابقة:",en:"Past plans:"},
     histNone:{ar:"لا يوجد بعد",en:"None yet"},
     histR:{ar:"استرجاع",en:"Restore"},
@@ -698,6 +715,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     bIcs:{ar:"تنزيل للتقويم (.ics)",en:"Download for calendar (.ics)"},
     bTxt:{ar:"تنزيل نص الخطة (.txt)",en:"Download plan text (.txt)"},
     bShare:{ar:"مشاركة الخطة",en:"Share plan"},
+    bLink:{ar:"نسخ رابط الخطة",en:"Copy plan link"},
     bJson:{ar:"تنزيل نسخة احتياطية",en:"Download backup"},
     bImp:{ar:"استيراد نسخة",en:"Import backup"},
     bCopy:{ar:"نسخ الخطة نصا",en:"Copy plan as text"},
@@ -765,7 +783,14 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   bind("days","daysVal",function(x){return lang==="ar"?arUnit(x,"يوم","يومان","أيام"):x+"d"});
   bind("weeks","weeksVal",function(x){return lang==="ar"?arUnit(x,"أسبوع","أسبوعان","أسابيع"):x+"w"});
   bind("share","shareVal",function(x){return x+"%"});
-  ["job","age","income","health","energy","place","weekend","goalText","goal2","budget","level","obstacle"].forEach(function(id){$(id).addEventListener("input",function(){meter();timeCheck()})});
+  ["job","age","income","health","energy","place","weekend","goalText","goal2","budget","level","obstacle","target"].forEach(function(id){$(id).addEventListener("input",function(){meter();timeCheck()})});
+  $("target").addEventListener("change",function(){
+    if(!this.value)return;
+    var t=new Date(this.value+"T00:00:00"),now=new Date();now.setHours(0,0,0,0);
+    var days=Math.round((t-now)/86400000);
+    var w=Math.ceil(days/7);
+    if(w>=2&&w<=24){$("weeks").value=w;$("weeks").dispatchEvent(new Event("input"))}
+  });
 
   function selected(id){var out=[];$(id).querySelectorAll(".chip").forEach(function(c){if(c.getAttribute("aria-pressed")==="true")out.push(c.textContent.trim())});return out}
 
@@ -836,14 +861,14 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       energy:$("energy").value, place:$("place").value, weekend:$("weekend").value,
       goals:selected("goalChips"), goal:$("goalText").value.trim(),
       goal2:$("goal2").value.trim(), share:parseInt($("share").value,10),
-      weeks:parseInt($("weeks").value,10), budget:$("budget").value,
+      weeks:parseInt($("weeks").value,10), target:$("target").value, budget:$("budget").value,
       level:$("level").value, obstacle:$("obstacle").value
     };
   }
   function restoreForm(d){
     $("goalText").value=d.goal||"";$("goal2").value=d.goal2||"";
     if(d.hours)$("hours").value=d.hours;if(d.days)$("days").value=d.days;
-    if(d.weeks)$("weeks").value=d.weeks;if(d.share)$("share").value=d.share;
+    if(d.weeks)$("weeks").value=d.weeks;if(d.share)$("share").value=d.share;if(d.target)$("target").value=d.target;
     ["job","age","income","health","energy","place","weekend","budget","level","obstacle"].forEach(function(k){if(d[k])$(k).value=d[k]});
     if(d.goals)setChips("goalChips",d.goals);
     if(d.duties)setChips("dutyChips",d.duties);
@@ -961,6 +986,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     var second=d.goal2?"<li><b>هدفك الثانوي ("+esc(d.goal2)+"):</b> "+weekly2+" س أسبوعيا ("+d.share+"%) — جلسة صيانة قصيرة لا تنافس الأساسي "+weeklyMain+" س.</li>":"";
 
     return "<h3>خطتك: "+esc(d.goal)+"</h3>"
+    +(d.target?"<p class='hint'>تستهدف إنجازها بحلول "+esc(d.target)+".</p>":"")
     +'<div class="kpi"><div><b>'+weekly+' س</b><span>أسبوعيا · '+band+'</span></div><div><b>'+total+' س</b><span>إجمالي '+d.weeks+' أسابيع</span></div><div><b>'+d.days+' أيام</b><span>التزام أسبوعي</span></div></div>'
     +"<h4>يومك التنفيذي ("+d.hours+" ساعة)</h4><ul><li>"+sess+"</li><li><b>الفترة الذهبية:</b> "+slot+"</li><li>"+esc(jobNote)+"</li><li><b>أيام جلساتك:</b> "+esc(sessionDayNames(d))+".</li><li><b>إجمالي الجلسات:</b> "+(d.weeks*d.days)+" جلسة × "+d.hours+" س = "+total+" س.</li>"+second+"</ul>"
     +"<h4>ظروفك بعين الاعتبار</h4><ul>"+items+"<li>"+esc(lvl)+"</li><li>"+bud+"</li></ul>"
@@ -1014,6 +1040,21 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     $("stStreak").textContent=streak;
     $("stSessions").textContent=sessions;
     $("stMinutes").textContent=mins;
+    var wc=$("weekChart");if(wc){
+      wc.innerHTML="";
+      var vals=[],mx=1,i,dt;
+      var dys=[];
+      for(i=6;i>=0;i--){dt=new Date();dt.setDate(dt.getDate()-i);dys.push(dt);var kk=dayKey(dt);vals.push(l[kk]||0);if((l[kk]||0)>mx)mx=l[kk]}
+      var wd=["أحد","اثنين","ثلا","أرب","خمي","جمع","سبت"];
+      for(i=0;i<7;i++){
+        var wrap=document.createElement("div");wrap.className="bar-w";
+        var vv=document.createElement("span");vv.className="bar-v";vv.textContent=vals[i]>0?vals[i]:"";
+        var bar=document.createElement("div");bar.className="bar";
+        bar.style.height=Math.max(4,Math.round(vals[i]/mx*100))+"%";bar.title=vals[i]+" د";
+        var lb=document.createElement("span");lb.textContent=wd[dys[i].getDay()];
+        wrap.appendChild(vv);wrap.appendChild(bar);wrap.appendChild(lb);wc.appendChild(wrap);
+      }
+    }
   }
   function logSession(minutes){
     var l=log(),k=dayKey(new Date());
@@ -1197,6 +1238,13 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     dl("masar-plan.ics",ics,"text/calendar;charset=utf-8");
   });
 
+  function b64e(s){var b=new TextEncoder().encode(s),r="";b.forEach(function(x){r+=String.fromCharCode(x)});return btoa(r).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+  function b64d(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";var r=atob(s),b=new Uint8Array(r.length);for(var i=0;i<r.length;i++)b[i]=r.charCodeAt(i);return new TextDecoder().decode(b)}
+  $("linkBtn").addEventListener("click",function(){
+    var d;try{d=JSON.parse(localStorage.getItem("masar-data")||"null")}catch(e){d=null}
+    if(!d)return;
+    copy(location.href.split("#")[0]+"#p="+b64e(JSON.stringify(d)),"تم نسخ رابط الخطة");
+  });
   $("shareBtn").addEventListener("click",function(){
     var t=planText();
     if(navigator.share){navigator.share({title:"خطتي من مسار",text:t}).catch(function(){})}
@@ -1257,10 +1305,22 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     location.reload();
   });
 
-  try{
-    var s=localStorage.getItem("masar-data");
-    if(s){restoreForm(JSON.parse(s))}
-  }catch(e){}
+  if(location.hash.indexOf("#p=")===0){
+    try{
+      var _pd=JSON.parse(b64d(location.hash.slice(3)));
+      localStorage.setItem("masar-data",JSON.stringify(_pd));
+      restoreForm(_pd);
+      $("planOut").innerHTML=buildPlan(_pd);
+      var _tt={weeks:_pd.weeks,states:[]};for(var _k=0;_k<_pd.weeks;_k++)_tt.states.push(0);saveTrack(_tt);
+      var _tk3=[];for(var _m=0;_m<Math.min(_pd.days||5,7);_m++)_tk3.push(false);saveTasks({n:_pd.days||5,checks:_tk3});
+      renderTrack();updateTodayDesc();resetTimer();show(3);
+    }catch(e){}
+  }else{
+    try{
+      var s=localStorage.getItem("masar-data");
+      if(s){restoreForm(JSON.parse(s))}
+    }catch(e){}
+  }
   applyLang();
   renderHist();renderStats();updateTodayDesc();resetTimer();
   try{if(localStorage.getItem("masar-remind")==="1")$("remindBtn").textContent=lang==="ar"?"التذكير مفعّل ✓":"Reminder on ✓"}catch(e){}

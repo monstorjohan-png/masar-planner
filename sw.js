@@ -1,4 +1,4 @@
-var CACHE = "masar-v4";
+var CACHE = "masar-v5";
 self.addEventListener("install", function (e) {
   e.waitUntil(
     caches.open(CACHE).then(function (c) {
