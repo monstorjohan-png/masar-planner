@@ -36,6 +36,8 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+html[data-motion="reduced"]{scroll-behavior:auto}
+html[data-motion="reduced"] *{transition:none!important}
 body{
   margin:0; font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;
   background:var(--bg); color:var(--text); line-height:1.8; font-size:var(--fs-base);
@@ -146,8 +148,16 @@ input[type="range"]{accent-color:var(--accent);padding:0;border:0;background:tra
 .form-nav{display:flex;gap:.7rem;justify-content:space-between;flex-wrap:wrap;margin-top:1rem}
 .error{color:var(--danger);font-size:.88rem;min-height:1.5em;margin:.4rem 0 0}
 .warn-box{background:var(--gold-soft);border:1px solid var(--gold);border-radius:var(--r-md);padding:.7rem 1rem;font-size:.9rem;margin-top:.8rem}
+.jumpbar{position:sticky;top:64px;z-index:10;display:flex;gap:.5rem;flex-wrap:wrap;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:var(--r-full);padding:.45rem .7rem;margin-bottom:1rem}
+.jumpbar a{font-size:.82rem;text-decoration:none;border:1px solid var(--border);border-radius:var(--r-full);padding:.2rem .8rem;background:var(--bg)}
+.jumpbar a:hover{border-color:var(--accent)}
+.task-sec{scroll-margin-top:130px}
+.sec-head{display:flex;align-items:center;gap:.7rem;margin:0 0 .6rem}
+.sec-num{width:34px;height:34px;border-radius:10px;background:var(--text-hi);color:var(--bg);display:grid;place-items:center;font-weight:700;flex:none}
+[data-theme="dark"] .sec-num{background:var(--accent);color:#0C0B09}
+.sec-head h3{margin:0;font-size:1.05rem}
+.sec-head p{margin:0;font-size:.85rem;color:var(--muted)}
 .out-box{background:var(--bg);border:1px dashed var(--border);border-radius:var(--r-md);padding:1.1rem;margin-bottom:1rem}
-.out-box h3{margin:0 0 .6rem;font-size:1.05rem}
 .plan h4{margin:1.1rem 0 .4rem;font-size:1rem}
 .plan ul{margin:.3rem 0;padding-inline-start:1.2rem}
 .plan li{margin-bottom:.3rem}
@@ -170,7 +180,6 @@ table.plan-table th{background:var(--surface-2)}
 .track-meta b{color:var(--text)}
 .note{background:var(--accent-soft);border:1px solid var(--border);border-radius:var(--r-md);padding:.8rem 1rem;margin-top:.8rem;font-size:.92rem}
 .today-card{background:var(--surface);border:2px solid var(--accent);border-radius:var(--r-lg);padding:1.1rem;margin-bottom:1rem}
-.today-card h3{margin:0 0 .4rem}
 .timer-display{font-size:2.4rem;font-weight:700;letter-spacing:.02em;margin:.4rem 0}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:.7rem 0}
 @media(max-width:640px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
@@ -178,11 +187,17 @@ table.plan-table th{background:var(--surface-2)}
 .stats-grid b{display:block;font-size:1.2rem}
 .stats-grid span{font-size:.75rem;color:var(--muted)}
 .hist-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.6rem}
+.set-grid{display:grid;gap:1rem}
+@media(min-width:768px){.set-grid{grid-template-columns:1fr 1fr}}
+.accent-row{display:flex;gap:.6rem;flex-wrap:wrap}
+.accent-pick{width:52px;height:52px;border-radius:14px;border:3px solid transparent;cursor:pointer;transition:all var(--dur) var(--ease)}
+.accent-pick[aria-pressed="true"]{border-color:var(--text-hi);transform:scale(1.06)}
 footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--muted);font-size:.88rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:375px){.wrap{padding-inline:.8rem}.card{padding:1rem}.kpi{grid-template-columns:1fr}}
 @media print{
-  .site-header,.hero,.steps-bar,.toolbar,.form-nav,#trackBox,#intBox,#todayBox,#statsBox,.skip{display:none!important}
+  .site-header,.hero,.steps-bar,.toolbar,.form-nav,.jumpbar,.skip,
+  #sec-today,#sec-stats,#sec-track,#sec-int,#sec-settings{display:none!important}
   body::before{display:none}
   .card{box-shadow:none}
   #step3{display:block!important}
@@ -198,6 +213,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       <span><b>مَسار</b><small data-i18n="tagline">خطط محكمة من ظروف حياتك الحقيقية</small></span>
     </a>
     <div class="nav-actions">
+      <a class="btn btn-ghost btn-small" href="#sec-settings" data-i18n="settingsBtn">⚙ الإعدادات</a>
       <button class="btn btn-ghost btn-small hidden" id="installBtn" data-i18n="install">ثبّت التطبيق</button>
       <button class="btn btn-ghost btn-small" id="langBtn" aria-label="Switch language">EN</button>
       <button class="btn btn-ghost btn-small theme-toggle" id="themeBtn" aria-label="تبديل المظهر">◐</button>
@@ -219,6 +235,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
           <li data-i18n="p3">🛡 خطة بديلة للطوارئ</li>
           <li data-i18n="p4">📈 متابعة وإعادة تخطيط</li>
           <li data-i18n="p5">⏲ مؤقت جلسات وتذكير</li>
+          <li data-i18n="p6">⚙ إعدادات كاملة تحت سيطرتك</li>
         </ul>
         <div class="tpl-strip">
           <h2 data-i18n="tplTitle">أو ابدأ من قالب جاهز:</h2>
@@ -237,7 +254,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
         <ol class="mini-steps">
           <li><span class="dot">1</span><span data-i18n="ms1"><b>ظروف الحياة:</b> العمل، الوقت، الصحة، الالتزامات.</span></li>
           <li><span class="dot">2</span><span data-i18n="ms2"><b>الهدف والمدة:</b> ماذا تريد وخلال كم أسبوع.</span></li>
-          <li><span class="dot">3</span><span data-i18n="ms3"><b>خطتك المحكمة:</b> جدول ومهام ومتابعة وتكاملات.</span></li>
+          <li><span class="dot">3</span><span data-i18n="ms3"><b>خطتك المحكمة:</b> أقسام لكل مهمة + إعداداتك.</span></li>
         </ol>
       </aside>
     </div>
@@ -253,7 +270,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     <div class="card">
       <h2 id="builderTitle" style="margin-top:0" data-i18n="buildTitle">ابنِ ملف ظروفك</h2>
 
-      <!-- الخطوة 1 -->
+      <!-- القسم 1: الظروف -->
       <fieldset id="step1">
         <legend data-i18n="leg1">أولا: ظروفك الحالية</legend>
         <div class="grid2">
@@ -350,7 +367,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
         <div class="form-nav"><span></span><button class="btn btn-primary" id="to2" data-i18n="nextBtn">التالي: الهدف ←</button></div>
       </fieldset>
 
-      <!-- الخطوة 2 -->
+      <!-- القسم 2: الهدف -->
       <fieldset id="step2" class="hidden">
         <legend data-i18n="leg2">ثانيا: هدفك وحدودك</legend>
         <div class="field">
@@ -399,71 +416,142 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
         </div>
       </fieldset>
 
-      <!-- الخطوة 3 -->
+      <!-- القسم 3: أقسام المهام -->
       <fieldset id="step3" class="hidden">
         <legend data-i18n="leg3">ثالثا: خطتك المحكمة حسب ظروفك</legend>
-        <div class="out-box plan" id="planOut" aria-live="polite"></div>
+        <nav class="jumpbar" aria-label="أقسام الخطة">
+          <a href="#sec-plan" data-i18n="j1">الخطة</a>
+          <a href="#sec-today" data-i18n="j2">جلسة اليوم</a>
+          <a href="#sec-stats" data-i18n="j3">الإحصائيات</a>
+          <a href="#sec-track" data-i18n="j4">المتابعة</a>
+          <a href="#sec-int" data-i18n="j5">التكاملات</a>
+          <a href="#sec-settings" data-i18n="j6">الإعدادات</a>
+        </nav>
 
-        <div class="today-card" id="todayBox">
-          <h3 data-i18n="todayT">جلسة اليوم</h3>
-          <p class="hint" id="todayDesc">—</p>
-          <div class="timer-display" id="timerDisp" role="timer" aria-live="off">25:00</div>
-          <div class="toolbar" style="margin-top:.4rem">
-            <button class="btn btn-small btn-primary" id="timerStart" data-i18n="tStart">ابدأ الجلسة</button>
-            <button class="btn btn-small" id="timerPause" data-i18n="tPause">إيقاف مؤقت</button>
-            <button class="btn btn-small" id="timerReset" data-i18n="tReset">تصفير</button>
-            <button class="btn btn-small" id="doneToday" data-i18n="tDone">أنجزت جلسة اليوم ✓</button>
-            <button class="btn btn-small btn-ghost" id="remindBtn" data-i18n="tRemind">تذكير يومي</button>
-          </div>
-        </div>
+        <section class="task-sec" id="sec-plan" aria-labelledby="h-plan">
+          <div class="sec-head"><span class="sec-num">1</span><div><h3 id="h-plan" data-i18n="secPlanT">قسم الخطة المحكمة</h3><p data-i18n="secPlanD">الجدول والمراحل وقواعد الطوارئ حسب ظروفك.</p></div></div>
+          <div class="out-box plan" id="planOut" aria-live="polite"></div>
+        </section>
 
-        <div class="out-box" id="statsBox">
-          <h3 data-i18n="statsT">إحصائياتك</h3>
-          <div class="stats-grid">
-            <div><b id="stStreak">0</b><span data-i18n="st1">أيام متتالية</span></div>
-            <div><b id="stSessions">0</b><span data-i18n="st2">جلسات منجزة</span></div>
-            <div><b id="stMinutes">0</b><span data-i18n="st3">دقائق التركيز</span></div>
-            <div><b id="stProgress">0%</b><span data-i18n="st4">تقدم الأسابيع</span></div>
+        <section class="task-sec" id="sec-today" aria-labelledby="h-today">
+          <div class="sec-head"><span class="sec-num">2</span><div><h3 id="h-today" data-i18n="todayT">قسم جلسة اليوم</h3><p data-i18n="secTodayD">مهمتك اليوم + المؤقت + التذكير.</p></div></div>
+          <div class="today-card">
+            <p class="hint" id="todayDesc">—</p>
+            <div class="timer-display" id="timerDisp" role="timer" aria-live="off">25:00</div>
+            <div class="toolbar" style="margin-top:.4rem">
+              <button class="btn btn-small btn-primary" id="timerStart" data-i18n="tStart">ابدأ الجلسة</button>
+              <button class="btn btn-small" id="timerPause" data-i18n="tPause">إيقاف مؤقت</button>
+              <button class="btn btn-small" id="timerReset" data-i18n="tReset">تصفير</button>
+              <button class="btn btn-small" id="doneToday" data-i18n="tDone">أنجزت جلسة اليوم ✓</button>
+              <button class="btn btn-small btn-ghost" id="remindBtn" data-i18n="tRemind">تذكير يومي</button>
+            </div>
           </div>
-          <div class="hist-row">
-            <label for="histSel" style="font-size:.9rem" data-i18n="histL">خطط سابقة:</label>
-            <select id="histSel" style="max-width:280px"><option value="" data-i18n="histNone">لا يوجد بعد</option></select>
-            <button class="btn btn-small btn-ghost" id="histRestore" data-i18n="histR">استرجاع</button>
-          </div>
-        </div>
+        </section>
 
-        <div class="out-box" id="trackBox">
-          <h3 data-i18n="trackT">سجل المتابعة الأسبوعي</h3>
-          <p class="hint" data-i18n="trackH">اضغط على كل أسبوع لتحديث حالته: لم يبدأ ← منجز ← جزئي ← ضائع. تُحفظ المتابعة على جهازك وتُستخدم لإعادة التخطيط.</p>
-          <div class="track-grid" id="trackGrid"></div>
-          <div class="track-meta"><span><span data-i18n="trP">التقدم:</span> <b id="trackPct">0%</b></span><span><span data-i18n="trD">أسابيع منجزة:</span> <b id="trackDone">0</b></span><span><span data-i18n="trM">أسابيع ضائعة:</span> <b id="trackMiss">0</b></span></div>
-          <div class="toolbar">
-            <button class="btn btn-small btn-primary" id="replan" data-i18n="replanBtn">أعد التخطيط حسب التقدم</button>
+        <section class="task-sec" id="sec-stats" aria-labelledby="h-stats">
+          <div class="sec-head"><span class="sec-num">3</span><div><h3 id="h-stats" data-i18n="statsT">قسم الإحصائيات والخطط السابقة</h3><p data-i18n="secStatsD">تقدمك وأرشيف خططك.</p></div></div>
+          <div class="out-box">
+            <div class="stats-grid">
+              <div><b id="stStreak">0</b><span data-i18n="st1">أيام متتالية</span></div>
+              <div><b id="stSessions">0</b><span data-i18n="st2">جلسات منجزة</span></div>
+              <div><b id="stMinutes">0</b><span data-i18n="st3">دقائق التركيز</span></div>
+              <div><b id="stProgress">0%</b><span data-i18n="st4">تقدم الأسابيع</span></div>
+            </div>
+            <div class="hist-row">
+              <label for="histSel" style="font-size:.9rem" data-i18n="histL">خطط سابقة:</label>
+              <select id="histSel" style="max-width:280px"><option value="" data-i18n="histNone">لا يوجد بعد</option></select>
+              <button class="btn btn-small btn-ghost" id="histRestore" data-i18n="histR">استرجاع</button>
+            </div>
           </div>
-          <div class="note hidden" id="replanOut" aria-live="polite"></div>
-        </div>
-        <div class="out-box" id="intBox">
-          <h3 data-i18n="intT">تكاملات: تقويم ومشاركة ونسخ احتياطي</h3>
-          <div class="toolbar">
-            <button class="btn btn-small" id="icsBtn" data-i18n="bIcs">تنزيل للتقويم (.ics)</button>
-            <button class="btn btn-small" id="txtBtn" data-i18n="bTxt">تنزيل نص الخطة (.txt)</button>
-            <button class="btn btn-small" id="shareBtn" data-i18n="bShare">مشاركة الخطة</button>
-            <button class="btn btn-small" id="jsonBtn" data-i18n="bJson">تنزيل نسخة احتياطية</button>
-            <button class="btn btn-small" id="importBtn" data-i18n="bImp">استيراد نسخة</button>
-            <input type="file" id="importFile" accept="application/json" class="hidden" aria-label="ملف النسخة الاحتياطية">
-            <button class="btn btn-small" id="copyPlan" data-i18n="bCopy">نسخ الخطة نصا</button>
-            <button class="btn btn-small" id="printBtn" data-i18n="bPrint">طباعة / PDF</button>
-            <button class="btn btn-small btn-ghost" id="restart" data-i18n="bRestart">البدء من جديد</button>
+        </section>
+
+        <section class="task-sec" id="sec-track" aria-labelledby="h-track">
+          <div class="sec-head"><span class="sec-num">4</span><div><h3 id="h-track" data-i18n="trackT">قسم المتابعة وإعادة التخطيط</h3><p data-i18n="secTrackD">حدّث حالة كل أسبوع وأعد التخطيط عند التعثر.</p></div></div>
+          <div class="out-box">
+            <p class="hint" data-i18n="trackH">اضغط على كل أسبوع لتحديث حالته: لم يبدأ ← منجز ← جزئي ← ضائع. تُحفظ المتابعة على جهازك وتُستخدم لإعادة التخطيط.</p>
+            <div class="track-grid" id="trackGrid"></div>
+            <div class="track-meta"><span><span data-i18n="trP">التقدم:</span> <b id="trackPct">0%</b></span><span><span data-i18n="trD">أسابيع منجزة:</span> <b id="trackDone">0</b></span><span><span data-i18n="trM">أسابيع ضائعة:</span> <b id="trackMiss">0</b></span></div>
+            <div class="toolbar">
+              <button class="btn btn-small btn-primary" id="replan" data-i18n="replanBtn">أعد التخطيط حسب التقدم</button>
+            </div>
+            <div class="note hidden" id="replanOut" aria-live="polite"></div>
           </div>
-          <p class="hint" data-i18n="intH">ملف التقويم يضيف جلسة أسبوعية متكررة بمدة جلستك اليومية. النسخة الاحتياطية تنقل خطتك لجهاز آخر.</p>
-        </div>
+        </section>
+
+        <section class="task-sec" id="sec-int" aria-labelledby="h-int">
+          <div class="sec-head"><span class="sec-num">5</span><div><h3 id="h-int" data-i18n="intT">قسم التكاملات والتصدير</h3><p data-i18n="secIntD">التقويم والمشاركة والنسخ الاحتياطي والطباعة.</p></div></div>
+          <div class="out-box">
+            <div class="toolbar">
+              <button class="btn btn-small" id="icsBtn" data-i18n="bIcs">تنزيل للتقويم (.ics)</button>
+              <button class="btn btn-small" id="txtBtn" data-i18n="bTxt">تنزيل نص الخطة (.txt)</button>
+              <button class="btn btn-small" id="shareBtn" data-i18n="bShare">مشاركة الخطة</button>
+              <button class="btn btn-small" id="jsonBtn" data-i18n="bJson">تنزيل نسخة احتياطية</button>
+              <button class="btn btn-small" id="importBtn" data-i18n="bImp">استيراد نسخة</button>
+              <input type="file" id="importFile" accept="application/json" class="hidden" aria-label="ملف النسخة الاحتياطية">
+              <button class="btn btn-small" id="copyPlan" data-i18n="bCopy">نسخ الخطة نصا</button>
+              <button class="btn btn-small" id="printBtn" data-i18n="bPrint">طباعة / PDF</button>
+              <button class="btn btn-small btn-ghost" id="restart" data-i18n="bRestart">البدء من جديد</button>
+            </div>
+            <p class="hint" data-i18n="intH">ملف التقويم يضيف جلسة أسبوعية متكررة بمدة جلستك اليومية. النسخة الاحتياطية تنقل خطتك لجهاز آخر.</p>
+          </div>
+        </section>
         <div class="form-nav"><button class="btn btn-ghost" id="back2" data-i18n="editBtn">→ تعديل المدخلات</button><span></span></div>
       </fieldset>
     </div>
   </section>
+
+  <!-- قسم الإعدادات: مستقل ودائم -->
+  <section class="builder" id="sec-settings" aria-labelledby="setTitle" style="padding-top:0">
+    <div class="card task-sec">
+      <div class="sec-head"><span class="sec-num">⚙</span><div><h2 id="setTitle" style="margin:0;font-size:1.2rem" data-i18n="setT">قسم الإعدادات — غيّر ما تريد</h2><p data-i18n="setD">كل إعداد يُحفظ فورا على جهازك ويُطبق مباشرة.</p></div></div>
+      <div class="set-grid">
+        <div class="field">
+          <label for="setTheme" data-i18n="setThemeL">المظهر</label>
+          <select id="setTheme"><option value="light" data-i18n="thL">فاتح</option><option value="dark" data-i18n="thD">داكن</option><option value="system" data-i18n="thS">حسب النظام</option></select>
+        </div>
+        <div class="field">
+          <label data-i18n="setAccentL">لون التمييز</label>
+          <div class="accent-row" id="accentRow">
+            <button type="button" class="accent-pick" data-accent="green" style="background:#1A5C4D" aria-label="زيتي" aria-pressed="true"></button>
+            <button type="button" class="accent-pick" data-accent="navy" style="background:#1F3A5F" aria-label="كحلي" aria-pressed="false"></button>
+            <button type="button" class="accent-pick" data-accent="maroon" style="background:#7A2E2E" aria-label="عنابي" aria-pressed="false"></button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="setFont" data-i18n="setFontL">حجم الخط</label>
+          <select id="setFont"><option value="normal" data-i18n="fN">عادي</option><option value="large" data-i18n="fL">كبير (لضعاف النظر)</option></select>
+        </div>
+        <div class="field">
+          <label for="setMotion" data-i18n="setMotionL">الحركة</label>
+          <select id="setMotion"><option value="full" data-i18n="mF">كاملة</option><option value="reduced" data-i18n="mR">مخفّضة</option></select>
+        </div>
+        <div class="field">
+          <label for="setSession" data-i18n="setSessionL">مدة جلسة المؤقت</label>
+          <select id="setSession"><option value="auto" data-i18n="sA">تلقائي حسب خطتي</option><option value="25">25 دقيقة</option><option value="50">50 دقيقة</option></select>
+        </div>
+        <div class="field">
+          <label for="setRemindTime" data-i18n="setRemindL">ساعة التذكير (اتركها فارغة للتلقائي)</label>
+          <input type="time" id="setRemindTime">
+        </div>
+        <div class="field">
+          <label for="setWeekStart" data-i18n="setWeekL">بداية أسبوع التقويم</label>
+          <select id="setWeekStart"><option value="sat" data-i18n="wSat">السبت</option><option value="sun" data-i18n="wSun">الأحد</option><option value="mon" data-i18n="wMon">الاثنين</option></select>
+        </div>
+        <div class="field">
+          <label data-i18n="setDataL">بياناتي</label>
+          <div class="toolbar" style="margin-top:0">
+            <button class="btn btn-small" id="exportAll" data-i18n="dExp">تنزيل كل بياناتي</button>
+            <button class="btn btn-small" id="importAllBtn" data-i18n="dImp">استيراد</button>
+            <input type="file" id="importAllFile" accept="application/json" class="hidden" aria-label="ملف البيانات">
+            <button class="btn btn-small btn-ghost" id="wipeAll" data-i18n="dWipe">مسح كل شيء</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
-<footer><div class="wrap"><span data-i18n="footer">مَسار v3 — يعمل دون خادم ودون اتصال بعد أول تحميل. بياناتك لا تغادر متصفحك. صُمم Mobile-First ويحترم تقليل الحركة.</span></div></footer>
+<footer><div class="wrap"><span data-i18n="footer">مَسار v4 — يعمل دون خادم ودون اتصال بعد أول تحميل. بياناتك لا تغادر متصفحك. صُمم Mobile-First ويحترم تقليل الحركة.</span></div></footer>
 
 <script>
 (function(){
@@ -471,10 +559,61 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   var $=function(id){return document.getElementById(id)};
   var root=document.documentElement;
 
+  // الإعدادات
+  var DEF_SET={theme:"light",accent:"green",fontSize:"normal",motion:"full",sessionLen:"auto",remindTime:"",weekStart:"sat"};
+  var ACCENTS={
+    green:{light:["#1A5C4D","#14493E","#E3EFE9"],dark:["#5FC2A6","#7AD4B8","#1E332C"]},
+    navy:{light:["#1F3A5F","#162945","#E2EAF3"],dark:["#7AA5D2","#93BCE0","#1B2A3D"]},
+    maroon:{light:["#7A2E2E","#5F2323","#F3E4E4"],dark:["#D28A8A","#DEA3A3","#3A2222"]}
+  };
+  function settings(){try{var s=JSON.parse(localStorage.getItem("masar-settings")||"null");if(s)return Object.assign({},DEF_SET,s)}catch(e){}return Object.assign({},DEF_SET)}
+  function saveSettings(s){try{localStorage.setItem("masar-settings",JSON.stringify(s))}catch(e){}}
+  function isDark(){return root.getAttribute("data-theme")==="dark"}
+  function applySettings(){
+    var s=settings();
+    if(s.theme==="system"){
+      var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if(dark)root.setAttribute("data-theme","dark");else root.removeAttribute("data-theme");
+    }else if(s.theme==="dark"){root.setAttribute("data-theme","dark")}
+    else{root.removeAttribute("data-theme")}
+    var pal=ACCENTS[s.accent]||ACCENTS.green;
+    var c=isDark()?pal.dark:pal.light;
+    root.style.setProperty("--accent",c[0]);
+    root.style.setProperty("--accent-hover",c[1]);
+    root.style.setProperty("--accent-soft",c[2]);
+    root.style.setProperty("--theme-color",c[0]);
+    root.setAttribute("data-motion",s.motion==="reduced"?"reduced":"full");
+    root.style.fontSize=s.fontSize==="large"?"112.5%":"";
+    $("setTheme").value=s.theme;$("setFont").value=s.fontSize;
+    $("setMotion").value=s.motion;$("setSession").value=s.sessionLen;
+    $("setRemindTime").value=s.remindTime||"";$("setWeekStart").value=s.weekStart;
+    $("accentRow").querySelectorAll(".accent-pick").forEach(function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-accent")===s.accent))});
+  }
+  if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").addEventListener){
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){if(settings().theme==="system")applySettings()});
+  }
+  $("setTheme").addEventListener("change",function(){var s=settings();s.theme=this.value;saveSettings(s);applySettings()});
+  $("setFont").addEventListener("change",function(){var s=settings();s.fontSize=this.value;saveSettings(s);applySettings()});
+  $("setMotion").addEventListener("change",function(){var s=settings();s.motion=this.value;saveSettings(s);applySettings()});
+  $("setSession").addEventListener("change",function(){var s=settings();s.sessionLen=this.value;saveSettings(s);resetTimer()});
+  $("setRemindTime").addEventListener("change",function(){var s=settings();s.remindTime=this.value;saveSettings(s)});
+  $("setWeekStart").addEventListener("change",function(){var s=settings();s.weekStart=this.value;saveSettings(s)});
+  $("accentRow").addEventListener("click",function(e){
+    var b=e.target.closest(".accent-pick");if(!b)return;
+    var s=settings();s.accent=b.getAttribute("data-accent");saveSettings(s);applySettings();
+  });
+  $("themeBtn").addEventListener("click",function(){
+    var s=settings();s.theme=isDark()?"light":"dark";saveSettings(s);applySettings();
+  });
+  applySettings();
+
+  try{var oldTheme=localStorage.getItem("masar-theme");if(oldTheme){var s0=settings();if(!localStorage.getItem("masar-settings")){s0.theme=oldTheme;saveSettings(s0);applySettings()}} }catch(e){}
+
   // اللغة
   var I18N={
     skip:{ar:"تخطَّ إلى بناء الخطة",en:"Skip to plan builder"},
     tagline:{ar:"خطط محكمة من ظروف حياتك الحقيقية",en:"Tight plans from your real life"},
+    settingsBtn:{ar:"⚙ الإعدادات",en:"⚙ Settings"},
     install:{ar:"ثبّت التطبيق",en:"Install app"},
     cta:{ar:"ابنِ خطتك",en:"Build your plan"},
     kicker:{ar:"خطة تبنى على وقتك ودخلك والتزاماتك — بدون حساب",en:"A plan built on your time, income and duties — no account"},
@@ -485,12 +624,13 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     p3:{ar:"🛡 خطة بديلة للطوارئ",en:"🛡 Emergency fallback plan"},
     p4:{ar:"📈 متابعة وإعادة تخطيط",en:"📈 Tracking and replanning"},
     p5:{ar:"⏲ مؤقت جلسات وتذكير",en:"⏲ Session timer and reminders"},
+    p6:{ar:"⚙ إعدادات كاملة تحت سيطرتك",en:"⚙ Full settings under your control"},
     tplTitle:{ar:"أو ابدأ من قالب جاهز:",en:"Or start from a template:"},
     trust:{ar:"اكتمال ملف ظروفك",en:"Profile completeness"},
     localOnly:{ar:"تُحفظ البيانات محليا فقط",en:"Data stays on your device"},
     ms1:{ar:"<b>ظروف الحياة:</b> العمل، الوقت، الصحة، الالتزامات.",en:"<b>Life context:</b> work, time, health, duties."},
     ms2:{ar:"<b>الهدف والمدة:</b> ماذا تريد وخلال كم أسبوع.",en:"<b>Goal and duration:</b> what you want, in how many weeks."},
-    ms3:{ar:"<b>خطتك المحكمة:</b> جدول ومهام ومتابعة وتكاملات.",en:"<b>Your tight plan:</b> schedule, tasks, tracking, integrations."},
+    ms3:{ar:"<b>خطتك المحكمة:</b> أقسام لكل مهمة + إعداداتك.",en:"<b>Your tight plan:</b> a section per task + your settings."},
     s1:{ar:"ظروف الحياة",en:"Life context"},
     s2:{ar:"الهدف والمدة",en:"Goal and duration"},
     s3:{ar:"خطتك المحكمة",en:"Your tight plan"},
@@ -498,6 +638,18 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     leg1:{ar:"أولا: ظروفك الحالية",en:"1. Your current circumstances"},
     leg2:{ar:"ثانيا: هدفك وحدودك",en:"2. Your goal and limits"},
     leg3:{ar:"ثالثا: خطتك المحكمة حسب ظروفك",en:"3. Your tight plan"},
+    j1:{ar:"الخطة",en:"Plan"},
+    j2:{ar:"جلسة اليوم",en:"Today"},
+    j3:{ar:"الإحصائيات",en:"Stats"},
+    j4:{ar:"المتابعة",en:"Track"},
+    j5:{ar:"التكاملات",en:"Export"},
+    j6:{ar:"الإعدادات",en:"Settings"},
+    secPlanT:{ar:"قسم الخطة المحكمة",en:"Tight plan section"},
+    secPlanD:{ar:"الجدول والمراحل وقواعد الطوارئ حسب ظروفك.",en:"Schedule, phases and fallback rules for your context."},
+    secTodayD:{ar:"مهمتك اليوم + المؤقت + التذكير.",en:"Today's task + timer + reminder."},
+    secStatsD:{ar:"تقدمك وأرشيف خططك.",en:"Your progress and plan archive."},
+    secTrackD:{ar:"حدّث حالة كل أسبوع وأعد التخطيط عند التعثر.",en:"Update each week, replan when stuck."},
+    secIntD:{ar:"التقويم والمشاركة والنسخ الاحتياطي والطباعة.",en:"Calendar, share, backup and print."},
     jobL:{ar:"الوضع المهني",en:"Work status"},
     ageL:{ar:"الفئة العمرية",en:"Age group"},
     incomeL:{ar:"الدخل الشهري التقريبي",en:"Approx. monthly income"},
@@ -523,13 +675,13 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     shareL:{ar:"حصة الهدف الثانوي:",en:"Secondary goal share:"},
     backBtn:{ar:"→ رجوع",en:"→ Back"},
     genBtn:{ar:"ولّد خطتي المحكمة ←",en:"Generate my tight plan →"},
-    todayT:{ar:"جلسة اليوم",en:"Today's session"},
+    todayT:{ar:"قسم جلسة اليوم",en:"Today's session section"},
     tStart:{ar:"ابدأ الجلسة",en:"Start session"},
     tPause:{ar:"إيقاف مؤقت",en:"Pause"},
     tReset:{ar:"تصفير",en:"Reset"},
     tDone:{ar:"أنجزت جلسة اليوم ✓",en:"Done today's session ✓"},
     tRemind:{ar:"تذكير يومي",en:"Daily reminder"},
-    statsT:{ar:"إحصائياتك",en:"Your stats"},
+    statsT:{ar:"قسم الإحصائيات والخطط السابقة",en:"Stats and past plans section"},
     st1:{ar:"أيام متتالية",en:"Day streak"},
     st2:{ar:"جلسات منجزة",en:"Sessions done"},
     st3:{ar:"دقائق التركيز",en:"Focus minutes"},
@@ -537,13 +689,13 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     histL:{ar:"خطط سابقة:",en:"Past plans:"},
     histNone:{ar:"لا يوجد بعد",en:"None yet"},
     histR:{ar:"استرجاع",en:"Restore"},
-    trackT:{ar:"سجل المتابعة الأسبوعي",en:"Weekly tracking log"},
+    trackT:{ar:"قسم المتابعة وإعادة التخطيط",en:"Tracking and replanning section"},
     trackH:{ar:"اضغط على كل أسبوع لتحديث حالته: لم يبدأ ← منجز ← جزئي ← ضائع. تُحفظ المتابعة على جهازك وتُستخدم لإعادة التخطيط.",en:"Tap each week to update it: pending → done → partial → missed. Saved on your device, used for replanning."},
     trP:{ar:"التقدم:",en:"Progress:"},
     trD:{ar:"أسابيع منجزة:",en:"Weeks done:"},
     trM:{ar:"أسابيع ضائعة:",en:"Weeks missed:"},
     replanBtn:{ar:"أعد التخطيط حسب التقدم",en:"Replan from progress"},
-    intT:{ar:"تكاملات: تقويم ومشاركة ونسخ احتياطي",en:"Integrations: calendar, share, backup"},
+    intT:{ar:"قسم التكاملات والتصدير",en:"Integrations and export section"},
     bIcs:{ar:"تنزيل للتقويم (.ics)",en:"Download for calendar (.ics)"},
     bTxt:{ar:"تنزيل نص الخطة (.txt)",en:"Download plan text (.txt)"},
     bShare:{ar:"مشاركة الخطة",en:"Share plan"},
@@ -554,7 +706,31 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     bRestart:{ar:"البدء من جديد",en:"Start over"},
     intH:{ar:"ملف التقويم يضيف جلسة أسبوعية متكررة بمدة جلستك اليومية. النسخة الاحتياطية تنقل خطتك لجهاز آخر.",en:"The calendar file adds a recurring weekly session. The backup moves your plan to another device."},
     editBtn:{ar:"→ تعديل المدخلات",en:"→ Edit inputs"},
-    footer:{ar:"مَسار v3 — يعمل دون خادم ودون اتصال بعد أول تحميل. بياناتك لا تغادر متصفحك. صُمم Mobile-First ويحترم تقليل الحركة.",en:"Masar v3 — no server, works offline after first load. Your data never leaves your browser."}
+    setT:{ar:"قسم الإعدادات — غيّر ما تريد",en:"Settings — change anything"},
+    setD:{ar:"كل إعداد يُحفظ فورا على جهازك ويُطبق مباشرة.",en:"Every setting saves instantly on your device and applies at once."},
+    setThemeL:{ar:"المظهر",en:"Theme"},
+    thL:{ar:"فاتح",en:"Light"},
+    thD:{ar:"داكن",en:"Dark"},
+    thS:{ar:"حسب النظام",en:"System"},
+    setAccentL:{ar:"لون التمييز",en:"Accent color"},
+    setFontL:{ar:"حجم الخط",en:"Font size"},
+    fN:{ar:"عادي",en:"Normal"},
+    fL:{ar:"كبير (لضعاف النظر)",en:"Large (low vision)"},
+    setMotionL:{ar:"الحركة",en:"Motion"},
+    mF:{ar:"كاملة",en:"Full"},
+    mR:{ar:"مخفّضة",en:"Reduced"},
+    setSessionL:{ar:"مدة جلسة المؤقت",en:"Timer session length"},
+    sA:{ar:"تلقائي حسب خطتي",en:"Auto from my plan"},
+    setRemindL:{ar:"ساعة التذكير (اتركها فارغة للتلقائي)",en:"Reminder time (blank = auto)"},
+    setWeekL:{ar:"بداية أسبوع التقويم",en:"Calendar week start"},
+    wSat:{ar:"السبت",en:"Saturday"},
+    wSun:{ar:"الأحد",en:"Sunday"},
+    wMon:{ar:"الاثنين",en:"Monday"},
+    setDataL:{ar:"بياناتي",en:"My data"},
+    dExp:{ar:"تنزيل كل بياناتي",en:"Download all my data"},
+    dImp:{ar:"استيراد",en:"Import"},
+    dWipe:{ar:"مسح كل شيء",en:"Erase everything"},
+    footer:{ar:"مَسار v4 — يعمل دون خادم ودون اتصال بعد أول تحميل. بياناتك لا تغادر متصفحك. صُمم Mobile-First ويحترم تقليل الحركة.",en:"Masar v4 — no server, works offline after first load. Your data never leaves your browser."}
   };
   var lang="ar";
   try{lang=localStorage.getItem("masar-lang")||"ar"}catch(e){}
@@ -569,39 +745,31 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     root.setAttribute("dir",lang==="ar"?"rtl":"ltr");
     $("langBtn").textContent=lang==="ar"?"EN":"عربي";
     try{localStorage.setItem("masar-lang",lang)}catch(e){}
+    ["hours","days","weeks"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
+    renderTrack();updateTodayDesc();
   }
   $("langBtn").addEventListener("click",function(){lang=lang==="ar"?"en":"ar";applyLang()});
-  applyLang();
-
-  var savedTheme=null; try{savedTheme=localStorage.getItem("masar-theme")}catch(e){}
-  if(savedTheme){root.setAttribute("data-theme",savedTheme)}
-  $("themeBtn").addEventListener("click",function(){
-    var next=root.getAttribute("data-theme")==="dark"?"light":"dark";
-    if(next==="light"){root.removeAttribute("data-theme")}else{root.setAttribute("data-theme","dark")}
-    try{localStorage.setItem("masar-theme",next==="light"?"light":"dark")}catch(e){}
-  });
 
   try{$("tzHint").textContent=Intl.DateTimeFormat().resolvedOptions().timeZone+" — "+new Date().toLocaleString(lang==="ar"?"ar":"en")}catch(e){$("tzHint").textContent="—"}
 
-  // تثبيت التطبيق
   var deferredPrompt=null;
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;$("installBtn").classList.remove("hidden")});
   $("installBtn").addEventListener("click",function(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;$("installBtn").classList.add("hidden")}});
 
   function chips(id,single){var el=$(id);el.addEventListener("click",function(e){if(e.target.classList.contains("chip")){var b=e.target;var on=b.getAttribute("aria-pressed")==="true";if(single&&!on){el.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed","false")})}b.setAttribute("aria-pressed",String(!on));meter()}})}
   chips("dutyChips",false);chips("goalChips",true);chips("faithChips",false);
+  function setChips(id,vals){$(id).querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed",String(vals.indexOf(c.textContent.trim())>=0))})}
 
+  function arUnit(x,one,two,many){if(x===1)return "1 "+one;if(x===2)return "2 "+two;if(x>=3&&x<=10)return x+" "+many;return x+" "+one}
   function bind(range,val,fmt){var r=$(range),v=$(val);function u(){v.textContent=fmt(parseFloat(r.value));meter();timeCheck()}r.addEventListener("input",u);u()}
-  function arNum(x,s1,s2){return x+" "+(x<=2?s1:s2)}
-  bind("hours","hoursVal",function(x){return lang==="ar"?arNum(x,"ساعة","ساعة"):x+"h"});
-  bind("days","daysVal",function(x){return lang==="ar"?arNum(x,"أيام","أيام"):x+"d"});
-  bind("weeks","weeksVal",function(x){return lang==="ar"?arNum(x,"أسابيع","أسابيع"):x+"w"});
+  bind("hours","hoursVal",function(x){return lang==="ar"?arUnit(x,"ساعة","ساعتين","ساعات"):x+"h"});
+  bind("days","daysVal",function(x){return lang==="ar"?arUnit(x,"يوم","يومان","أيام"):x+"d"});
+  bind("weeks","weeksVal",function(x){return lang==="ar"?arUnit(x,"أسبوع","أسبوعان","أسابيع"):x+"w"});
   bind("share","shareVal",function(x){return x+"%"});
   ["job","age","income","health","energy","place","weekend","goalText","goal2","budget","level","obstacle"].forEach(function(id){$(id).addEventListener("input",function(){meter();timeCheck()})});
 
   function selected(id){var out=[];$(id).querySelectorAll(".chip").forEach(function(c){if(c.getAttribute("aria-pressed")==="true")out.push(c.textContent.trim())});return out}
 
-  // فاحص واقعية الوقت
   function timeCheck(){
     var h=parseFloat($("hours").value),dy=parseInt($("days").value,10),job=$("job").value;
     var weekly=h*dy,w=$("timeWarn"),msg="";
@@ -627,7 +795,6 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   }
   meter();timeCheck();
 
-  // قوالب جاهزة
   var TPLS={
     dev:{goal:"تعلم مهارة",goalText:"أريد تعلم البرمجة وبناء 3 مشاريع والحصول على أول عمل حر خلال 12 أسبوعا.",hours:2,days:5,weeks:12,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"لا أعرف من أين أبدأ",job:"موظف دوام كامل",energy:"مرتفعة مساء",place:"عندي حاسوب وإنترنت جيد"},
     fit:{goal:"صحة / لياقة",goalText:"أريد خسارة 6 كيلو وبناء عادة المشي اليومي خلال 8 أسابيع.",hours:1,days:4,weeks:8,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"الإحباط السريع",job:"موظف دوام كامل",energy:"مرتفعة صباحا",health:"سليم"},
@@ -642,7 +809,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       if(t.obstacle)$("obstacle").value=t.obstacle;if(t.job)$("job").value=t.job;
       if(t.energy)$("energy").value=t.energy;if(t.place)$("place").value=t.place;
       if(t.health)$("health").value=t.health;if(t.income)$("income").value=t.income;
-      var gc=$("goalChips");gc.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed",String(c.textContent.trim()===t.goal))});
+      setChips("goalChips",[t.goal]);
       ["hours","days","weeks"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
       meter();timeCheck();show(2);
     });
@@ -673,6 +840,17 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       weeks:parseInt($("weeks").value,10), budget:$("budget").value,
       level:$("level").value, obstacle:$("obstacle").value
     };
+  }
+  function restoreForm(d){
+    $("goalText").value=d.goal||"";$("goal2").value=d.goal2||"";
+    if(d.hours)$("hours").value=d.hours;if(d.days)$("days").value=d.days;
+    if(d.weeks)$("weeks").value=d.weeks;if(d.share)$("share").value=d.share;
+    ["job","age","income","health","energy","place","weekend","budget","level","obstacle"].forEach(function(k){if(d[k])$(k).value=d[k]});
+    if(d.goals)setChips("goalChips",d.goals);
+    if(d.duties)setChips("dutyChips",d.duties);
+    if(d.faith)setChips("faithChips",d.faith);
+    ["hours","days","weeks","share"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
+    meter();timeCheck();
   }
 
   function dutyRule(x){
@@ -799,7 +977,6 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     $("stProgress").textContent=pct+"%";
   }
 
-  // سجل الجلسات اليومي
   function dayKey(dt){return dt.getFullYear()+"-"+(dt.getMonth()+1)+"-"+dt.getDate()}
   function log(){try{return JSON.parse(localStorage.getItem("masar-log")||"{}")}catch(e){return{}}}
   function saveLog(l){try{localStorage.setItem("masar-log",JSON.stringify(l))}catch(e){}}
@@ -818,15 +995,21 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     l[k]=(l[k]||0)+minutes;saveLog(l);renderStats();
   }
 
-  // المؤقت
   var timerId=null,timerLeft=25*60,timerTotal=25*60;
   function fmt(s){var m=Math.floor(s/60),ss=s%60;return (m<10?"0":"")+m+":"+(ss<10?"0":"")+ss}
   function drawTimer(){$("timerDisp").textContent=fmt(timerLeft)}
   function stopTimer(){if(timerId){clearInterval(timerId);timerId=null}}
-  function sessionMinutes(){var d;try{d=JSON.parse(localStorage.getItem("masar-data")||"null")}catch(e){d=null}return d&&d.hours>=2?50:25}
+  function sessionMinutes(){
+    var s=settings();
+    if(s.sessionLen==="25")return 25;
+    if(s.sessionLen==="50")return 50;
+    var d;try{d=JSON.parse(localStorage.getItem("masar-data")||"null")}catch(e){d=null}
+    return d&&d.hours>=2?50:25;
+  }
+  function resetTimer(){stopTimer();timerLeft=sessionMinutes()*60;timerTotal=timerLeft;drawTimer()}
   $("timerStart").addEventListener("click",function(){
     if(timerId)return;
-    if(timerLeft<=0||timerLeft===timerTotal){var m=sessionMinutes();timerTotal=m*60;timerLeft=timerTotal}
+    if(timerLeft<=0){resetTimer()}
     drawTimer();
     timerId=setInterval(function(){
       timerLeft--;
@@ -835,7 +1018,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     },1000);
   });
   $("timerPause").addEventListener("click",function(){stopTimer()});
-  $("timerReset").addEventListener("click",function(){stopTimer();timerLeft=sessionMinutes()*60;timerTotal=timerLeft;drawTimer()});
+  $("timerReset").addEventListener("click",function(){resetTimer()});
   $("doneToday").addEventListener("click",function(){
     var d;try{d=JSON.parse(localStorage.getItem("masar-data")||"null")}catch(e){d=null}
     logSession(d?Math.round(d.hours*60):25);
@@ -847,6 +1030,12 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       if("Notification" in window&&Notification.permission==="granted"){new Notification(title,{body:body});return}
     }catch(e){}
     var n=$("todayDesc");n.textContent=title+" — "+body;setTimeout(function(){updateTodayDesc()},4000);
+  }
+  function remindHour(){
+    var s=settings();
+    if(s.remindTime&&/^\d{2}:\d{2}$/.test(s.remindTime))return {h:parseInt(s.remindTime.slice(0,2),10),m:parseInt(s.remindTime.slice(3),10)};
+    var d;try{d=JSON.parse(localStorage.getItem("masar-data")||"null")}catch(e){d=null}
+    return {h:d?sessionHour(d.energy):18,m:0};
   }
   $("remindBtn").addEventListener("click",function(){
     if(!("Notification" in window)){$("todayDesc").textContent="متصفحك لا يدعم التنبيهات.";return}
@@ -863,16 +1052,15 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     try{
       if(localStorage.getItem("masar-remind")!=="1")return;
       if(!("Notification" in window)||Notification.permission!=="granted")return;
-      var d=JSON.parse(localStorage.getItem("masar-data")||"null");if(!d)return;
-      var now=new Date();
-      if(now.getHours()===sessionHour(d.energy)&&now.getMinutes()<1){
+      var rh=remindHour(),now=new Date();
+      if(now.getHours()===rh.h&&now.getMinutes()===rh.m){
         if(dayKey(now)!==localStorage.getItem("masar-reminded")){
           try{localStorage.setItem("masar-reminded",dayKey(now))}catch(e){}
-          new Notification("موعد جلسة مسار",["جلستك اليوم ",d.hours," ساعة — ابدأ الآن."].join(""));
+          new Notification("موعد جلسة مسار","جلستك اليوم حانت — ابدأ الآن.");
         }
       }
     }catch(e){}
-  },30000);
+  },20000);
 
   function updateTodayDesc(){
     var d;try{d=JSON.parse(localStorage.getItem("masar-data")||"null")}catch(e){d=null}
@@ -881,7 +1069,6 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     $("todayDesc").textContent="مهمتك ("+d.hours+" س): "+t.day+(d.goal2?" + صيانة: "+d.goal2:"");
   }
 
-  // سجل الخطط
   function hist(){try{return JSON.parse(localStorage.getItem("masar-history")||"[]")}catch(e){return[]}}
   function saveHist(h){try{localStorage.setItem("masar-history",JSON.stringify(h.slice(0,5)))}catch(e){}}
   function renderHist(){
@@ -898,10 +1085,10 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     if(isNaN(i)||!h[i])return;
     var d=h[i].data;
     try{localStorage.setItem("masar-data",JSON.stringify(d))}catch(e){}
-    $("goalText").value=d.goal||"";$("hours").value=d.hours;$("days").value=d.days;$("weeks").value=d.weeks;
-    meter();timeCheck();$("planOut").innerHTML=buildPlan(d);updateTodayDesc();
+    restoreForm(d);
+    $("planOut").innerHTML=buildPlan(d);updateTodayDesc();
     var t=track();if(t.weeks!==d.weeks){t={weeks:d.weeks,states:[]};for(var j=0;j<d.weeks;j++)t.states.push(0);saveTrack(t)}
-    renderTrack();show(3);
+    renderTrack();resetTimer();show(3);
   });
 
   $("generate").addEventListener("click",function(){
@@ -910,12 +1097,12 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     $("err2").textContent="";
     $("planOut").innerHTML=buildPlan(d);
     try{localStorage.setItem("masar-data",JSON.stringify(d))}catch(e){}
-    var h=hist();h.unshift({date:new Date().toLocaleDateString("ar"),goal:d.goal,weeks:d.weeks,data:d});saveHist(h);renderHist();
+    var h=hist();h.unshift({date:new Date().toLocaleDateString(lang==="ar"?"ar":"en"),goal:d.goal,weeks:d.weeks,data:d});saveHist(h);renderHist();
     var t=track();
     if(t.weeks!==d.weeks){t={weeks:d.weeks,states:[]};for(var i=0;i<d.weeks;i++)t.states.push(0);saveTrack(t)}
     $("replanOut").classList.add("hidden");
     renderTrack();renderStats();updateTodayDesc();
-    timerLeft=sessionMinutes()*60;timerTotal=timerLeft;drawTimer();
+    resetTimer();
     show(3);
   });
 
@@ -951,11 +1138,19 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
 
   function pad(n){return (n<10?"0":"")+n}
   function icsDate(dt){return dt.getFullYear()+pad(dt.getMonth()+1)+pad(dt.getDate())+"T"+pad(dt.getHours())+pad(dt.getMinutes())+"00"}
+  function nextWeekday(jsDay,hour){
+    var dt=new Date();dt.setHours(hour,0,0,0);
+    var diff=(jsDay-dt.getDay()+7)%7;
+    if(diff===0&&dt<=new Date())diff=7;
+    dt.setDate(dt.getDate()+diff);
+    return dt;
+  }
   $("icsBtn").addEventListener("click",function(){
     var d;try{d=JSON.parse(localStorage.getItem("masar-data")||"null")}catch(e){d=null}
     if(!d)return;
-    var hour=sessionHour(d.energy);
-    var start=new Date();start.setHours(hour,0,0,0);start.setDate(start.getDate()+1);
+    var s=settings();
+    var jsDay=s.weekStart==="sun"?0:(s.weekStart==="mon"?1:6);
+    var start=nextWeekday(jsDay,sessionHour(d.energy));
     var mins=Math.round(d.hours*60);
     var end=new Date(start.getTime()+mins*60000);
     var ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//masar//plan//AR","BEGIN:VEVENT","UID:masar-"+Date.now()+"@local","DTSTART:"+icsDate(start),"DTEND:"+icsDate(end),"RRULE:FREQ=WEEKLY;COUNT="+d.weeks,"SUMMARY:جلسة مسار — "+d.goal.slice(0,50),"DESCRIPTION:"+d.days+" أيام أسبوعيا × "+d.hours+" ساعة","END:VEVENT","END:VCALENDAR"].join("\r\n");
@@ -983,18 +1178,52 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
         if(p.data){localStorage.setItem("masar-data",JSON.stringify(p.data))}
         if(p.track&&p.track.weeks){saveTrack(p.track)}
         if(p.log){saveLog(p.log)}
-        if(p.data){$("goalText").value=p.data.goal||"";if(p.data.hours)$("hours").value=p.data.hours;if(p.data.days)$("days").value=p.data.days;if(p.data.weeks)$("weeks").value=p.data.weeks;meter();timeCheck();$("planOut").innerHTML=buildPlan(p.data);renderTrack();renderStats();updateTodayDesc();show(3)}
+        if(p.data){restoreForm(p.data);$("planOut").innerHTML=buildPlan(p.data);renderTrack();renderStats();updateTodayDesc();resetTimer();show(3)}
       }catch(err){$("replanOut").textContent="ملف غير صالح.";$("replanOut").classList.remove("hidden")}
     };
     r.readAsText(f);
   });
 
+  // بياناتي: تنزيل الكل / استيراد الكل / مسح
+  function allData(){
+    var o={settings:settings(),exportedAt:new Date().toISOString()};
+    ["masar-data","masar-track","masar-log","masar-history","masar-lang","masar-remind"].forEach(function(k){
+      try{o[k]=JSON.parse(localStorage.getItem(k)||"null")}catch(e){o[k]=localStorage.getItem(k)}
+    });
+    return o;
+  }
+  $("exportAll").addEventListener("click",function(){dl("masar-all-data.json",JSON.stringify(allData()),"application/json;charset=utf-8")});
+  $("importAllBtn").addEventListener("click",function(){$("importAllFile").click()});
+  $("importAllFile").addEventListener("change",function(e){
+    var f=e.target.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var p=JSON.parse(r.result);
+        if(p.settings){saveSettings(Object.assign({},DEF_SET,p.settings));applySettings()}
+        ["masar-data","masar-track","masar-log","masar-history","masar-lang"].forEach(function(k){
+          if(p[k]!==undefined&&p[k]!==null)localStorage.setItem(k,JSON.stringify(p[k]));
+        });
+        if(p["masar-data"]){restoreForm(p["masar-data"]);$("planOut").innerHTML=buildPlan(p["masar-data"]);renderTrack();renderStats();updateTodayDesc();resetTimer();show(3)}
+        else{renderTrack();renderStats()}
+      }catch(err){notify("استيراد","ملف غير صالح.")}
+    };
+    r.readAsText(f);
+  });
+  $("wipeAll").addEventListener("click",function(){
+    var ok=window.confirm(lang==="ar"?"سيُمسح كل شيء (الخطة والمتابعة والإحصائيات والإعدادات). متأكد؟":"Erase everything (plan, tracking, stats, settings)?");
+    if(!ok)return;
+    ["masar-data","masar-track","masar-log","masar-history","masar-settings","masar-remind","masar-reminded"].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
+    location.reload();
+  });
+
   try{
     var s=localStorage.getItem("masar-data");
-    if(s){var d=JSON.parse(s);if(d.goal)$("goalText").value=d.goal;if(d.hours)$("hours").value=d.hours;if(d.days)$("days").value=d.days;if(d.weeks)$("weeks").value=d.weeks;meter()}
+    if(s){restoreForm(JSON.parse(s))}
   }catch(e){}
-  renderHist();renderStats();updateTodayDesc();drawTimer();
-  try{if(localStorage.getItem("masar-remind")==="1")$("remindBtn").textContent="التذكير مفعّل ✓"}catch(e){}
+  applyLang();
+  renderHist();renderStats();updateTodayDesc();resetTimer();
+  try{if(localStorage.getItem("masar-remind")==="1")$("remindBtn").textContent=lang==="ar"?"التذكير مفعّل ✓":"Reminder on ✓"}catch(e){}
 
   if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){navigator.serviceWorker.register("./sw.js").catch(function(){})}
 })();
