@@ -162,6 +162,10 @@ details.task-sec summary:hover .sec-num{transform:scale(1.05)}
 .bar-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:.15rem;font-size:.7rem;color:var(--muted);height:100%;justify-content:flex-end}
 .bar{width:100%;max-width:34px;background:linear-gradient(180deg,var(--accent),var(--gold));border-radius:6px 6px 2px 2px;min-height:4px}
 .bar-v{font-weight:700;color:var(--text);font-size:.72rem;min-height:1em}
+.mini-group{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-md);padding:1rem 1.1rem;margin-bottom:1rem}
+.mini-group>h4{margin:0 0 .9rem;font-size:1.02rem;display:flex;align-items:center;gap:.6rem}
+.gnum{width:30px;height:30px;border-radius:9px;background:var(--accent);color:#fff;display:inline-grid;place-items:center;font-weight:700;flex:none}
+[data-theme="dark"] .gnum{color:#0C0B09}
 .task-sec{scroll-margin-top:130px}
 .sec-head{display:flex;align-items:center;gap:.7rem;margin:0 0 .6rem}
 .sec-num{width:34px;height:34px;border-radius:10px;background:var(--text-hi);color:var(--bg);display:grid;place-items:center;font-weight:700;flex:none}
@@ -283,8 +287,11 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
 
       <!-- القسم 1: الظروف -->
       <fieldset id="step1">
-        <legend data-i18n="leg1">أولا: ظروفك الحالية</legend>
-        <div class="grid2">
+        <legend data-i18n="leg1">أولا: ظروفك — 4 مجموعات قصيرة</legend>
+
+        <div class="mini-group">
+          <h4><span class="gnum">أ</span> <span data-i18n="gA">كم وقتك المتاح؟</span></h4>
+          <div class="grid2">
           <div class="field">
             <label for="job" data-i18n="jobL">الوضع المهني</label>
             <select id="job">
@@ -297,6 +304,48 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
               <option value="متقاعد">متقاعد</option>
             </select>
           </div>
+          <div class="field">
+            <label for="weekend" data-i18n="weekendL">عطلة نهاية الأسبوع</label>
+            <select id="weekend"><option selected>الجمعة – السبت</option><option>السبت – الأحد</option><option>أيام أخرى متفرقة</option></select>
+          </div>
+          <div class="field">
+            <label for="hours"><span data-i18n="hoursL">ساعات الفراغ يوميا:</span> <span class="range-val" id="hoursVal">2 ساعة</span></label>
+            <div class="range-row"><input type="range" id="hours" min="0.5" max="8" step="0.5" value="2"></div>
+            <span class="hint" data-i18n="hoursH">احسب فقط الوقت الصافي بعد النوم والعمل والمواصلات.</span>
+          </div>
+          <div class="field">
+            <label for="days"><span data-i18n="daysL">أيام التفرغ أسبوعيا:</span> <span class="range-val" id="daysVal">5 أيام</span></label>
+            <div class="range-row"><input type="range" id="days" min="1" max="7" step="1" value="5"></div>
+          </div>
+          </div>
+          <div class="warn-box hidden" id="timeWarn" role="alert" style="margin-top:.8rem"></div>
+        </div>
+
+        <div class="mini-group">
+          <h4><span class="gnum">ب</span> <span data-i18n="gB">يومك كيف يمشي؟ (دقة أعلى)</span></h4>
+          <div class="grid2">
+          <div class="field">
+            <label for="wake" data-i18n="wakeL">موعد استيقاظك المعتاد:</label>
+            <input type="time" id="wake" value="07:00">
+          </div>
+          <div class="field">
+            <label for="sleep"><span data-i18n="sleepL">ساعات نومك:</span> <span class="range-val" id="sleepVal">7 ساعات</span></label>
+            <div class="range-row"><input type="range" id="sleep" min="4" max="10" step="0.5" value="7"></div>
+          </div>
+          <div class="field">
+            <label for="commute"><span data-i18n="commuteL">مواصلاتك اليومية:</span> <span class="range-val" id="commuteVal">30 دقيقة</span></label>
+            <div class="range-row"><input type="range" id="commute" min="0" max="180" step="15" value="30"></div>
+          </div>
+          <div class="field">
+            <label for="dependents"><span data-i18n="depL">عدد المعالين:</span> <span class="range-val" id="depVal">لا يوجد</span></label>
+            <div class="range-row"><input type="range" id="dependents" min="0" max="8" step="1" value="0"></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="mini-group">
+          <h4><span class="gnum">ج</span> <span data-i18n="gC">ما وضعك العام؟</span></h4>
+          <div class="grid2">
           <div class="field">
             <label for="age" data-i18n="ageL">الفئة العمرية</label>
             <select id="age">
@@ -327,17 +376,15 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
             </select>
           </div>
           <div class="field">
-            <label for="hours"><span data-i18n="hoursL">ساعات الفراغ يوميا:</span> <span class="range-val" id="hoursVal">2 ساعة</span></label>
-            <div class="range-row"><input type="range" id="hours" min="0.5" max="8" step="0.5" value="2"></div>
-            <span class="hint" data-i18n="hoursH">احسب فقط الوقت الصافي بعد النوم والعمل والمواصلات.</span>
+            <label for="energy" data-i18n="energyL">مستوى طاقتك غالبا</label>
+            <select id="energy"><option>مرتفعة صباحا</option><option selected>متوسطة متذبذبة</option><option>منخفضة معظم اليوم</option><option>مرتفعة مساء</option></select>
           </div>
-          <div class="field">
-            <label for="days"><span data-i18n="daysL">أيام التفرغ أسبوعيا:</span> <span class="range-val" id="daysVal">5 أيام</span></label>
-            <div class="range-row"><input type="range" id="days" min="1" max="7" step="1" value="5"></div>
           </div>
         </div>
-        <div class="warn-box hidden" id="timeWarn" role="alert"></div>
-        <div class="field" style="margin-top:1rem">
+
+        <div class="mini-group">
+          <h4><span class="gnum">د</span> <span data-i18n="gD">ما الذي يشغلك؟ وأين تنفذ؟</span></h4>
+        <div class="field">
           <label data-i18n="dutyL">التزامات تستهلك وقتك (اختر كل ما ينطبق)</label>
           <div class="chips" id="dutyChips">
             <button type="button" class="chip" aria-pressed="false">أطفال</button>
@@ -348,31 +395,24 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
             <button type="button" class="chip" aria-pressed="false">مشكلة صحية / إرهاق</button>
           </div>
         </div>
-        <details class="out-box" style="margin-top:1rem">
-          <summary style="font-weight:700;cursor:pointer" data-i18n="faithL">اعتبارات دينية واجتماعية (اختياري)</summary>
-          <div class="chips" id="faithChips" style="margin-top:.6rem">
-            <button type="button" class="chip" aria-pressed="false">مراعاة أوقات الصلاة</button>
-            <button type="button" class="chip" aria-pressed="false">الصيام (رمضان أو تطوع)</button>
-          </div>
-        </details>
         <div class="grid2" style="margin-top:1rem">
-          <div class="field">
-            <label for="energy" data-i18n="energyL">مستوى طاقتك غالبا</label>
-            <select id="energy"><option>مرتفعة صباحا</option><option selected>متوسطة متذبذبة</option><option>منخفضة معظم اليوم</option><option>مرتفعة مساء</option></select>
-          </div>
           <div class="field">
             <label for="place" data-i18n="placeL">بيئة التنفيذ</label>
             <select id="place"><option>البيت فقط</option><option selected>البيت + الهاتف</option><option>عندي حاسوب وإنترنت جيد</option><option>أتنقل كثيرا</option></select>
-          </div>
-          <div class="field">
-            <label for="weekend" data-i18n="weekendL">عطلة نهاية الأسبوع</label>
-            <select id="weekend"><option selected>الجمعة – السبت</option><option>السبت – الأحد</option><option>أيام أخرى متفرقة</option></select>
           </div>
           <div class="field">
             <label data-i18n="tzL">المنطقة الزمنية</label>
             <div class="hint" id="tzHint" style="font-size:1rem;color:var(--text)">—</div>
             <span class="hint" data-i18n="tzH">تُستخدم عند تصدير المواعيد للتقويم.</span>
           </div>
+        </div>
+        <details class="out-box" style="margin-top:1rem;margin-bottom:0">
+          <summary style="font-weight:700;cursor:pointer" data-i18n="faithL">اعتبارات دينية واجتماعية (اختياري)</summary>
+          <div class="chips" id="faithChips" style="margin-top:.6rem">
+            <button type="button" class="chip" aria-pressed="false">مراعاة أوقات الصلاة</button>
+            <button type="button" class="chip" aria-pressed="false">الصيام (رمضان أو تطوع)</button>
+          </div>
+        </details>
         </div>
         <p class="error" id="err1"></p>
         <div class="form-nav"><span></span><button class="btn btn-primary" id="to2" data-i18n="nextBtn">التالي: الهدف ←</button></div>
@@ -646,7 +686,15 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     s2:{ar:"الهدف والمدة",en:"Goal and duration"},
     s3:{ar:"خطتك المحكمة",en:"Your tight plan"},
     buildTitle:{ar:"ابنِ ملف ظروفك",en:"Build your profile"},
-    leg1:{ar:"أولا: ظروفك الحالية",en:"1. Your current circumstances"},
+    leg1:{ar:"أولا: ظروفك — 4 مجموعات قصيرة",en:"1. Your context — 4 short groups"},
+    gA:{ar:"كم وقتك المتاح؟",en:"How much time do you have?"},
+    gB:{ar:"يومك كيف يمشي؟ (دقة أعلى)",en:"How does your day run? (finer detail)"},
+    gC:{ar:"ما وضعك العام؟",en:"What is your situation?"},
+    gD:{ar:"ما الذي يشغلك؟ وأين تنفذ؟",en:"What occupies you? Where do you work?"},
+    wakeL:{ar:"موعد استيقاظك المعتاد:",en:"Usual wake-up time:"},
+    sleepL:{ar:"ساعات نومك:",en:"Sleep hours:"},
+    commuteL:{ar:"مواصلاتك اليومية:",en:"Daily commute:"},
+    depL:{ar:"عدد المعالين:",en:"Dependents:"},
     leg2:{ar:"ثانيا: هدفك وحدودك",en:"2. Your goal and limits"},
     leg3:{ar:"ثالثا: خطتك المحكمة حسب ظروفك",en:"3. Your tight plan"},
     j1:{ar:"الخطة",en:"Plan"},
@@ -762,7 +810,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     root.setAttribute("dir",lang==="ar"?"rtl":"ltr");
     $("langBtn").textContent=lang==="ar"?"EN":"عربي";
     try{localStorage.setItem("masar-lang",lang)}catch(e){}
-    ["hours","days","weeks"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
+    ["hours","days","weeks","sleep","commute","dependents"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
     renderTrack();updateTodayDesc();
   }
   $("langBtn").addEventListener("click",function(){lang=lang==="ar"?"en":"ar";applyLang()});
@@ -783,7 +831,13 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   bind("days","daysVal",function(x){return lang==="ar"?arUnit(x,"يوم","يومان","أيام"):x+"d"});
   bind("weeks","weeksVal",function(x){return lang==="ar"?arUnit(x,"أسبوع","أسبوعان","أسابيع"):x+"w"});
   bind("share","shareVal",function(x){return x+"%"});
-  ["job","age","income","health","energy","place","weekend","goalText","goal2","budget","level","obstacle","target"].forEach(function(id){$(id).addEventListener("input",function(){meter();timeCheck()})});
+  bind("sleep","sleepVal",function(x){return lang==="ar"?x+" ساعات نوم":x+"h sleep"});
+  bind("commute","commuteVal",function(x){return x===0?(lang==="ar"?"بدون مواصلات":"No commute"):x+(lang==="ar"?" دقيقة":" min")});
+  bind("dependents","depVal",function(x){
+    if(lang!=="ar")return x+" dep.";
+    if(x===0)return "لا يوجد";if(x===1)return "معال واحد";if(x===2)return "معالان";return x+" معالين";
+  });
+  ["job","age","income","health","energy","place","weekend","goalText","goal2","budget","level","obstacle","target","wake"].forEach(function(id){$(id).addEventListener("input",function(){meter();timeCheck()})});
   $("target").addEventListener("change",function(){
     if(!this.value)return;
     var t=new Date(this.value+"T00:00:00"),now=new Date();now.setHours(0,0,0,0);
@@ -796,11 +850,14 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
 
   function timeCheck(){
     var h=parseFloat($("hours").value),dy=parseInt($("days").value,10),job=$("job").value;
-    var weekly=h*dy,w=$("timeWarn"),msg="";
-    if(job==="موظف دوام كامل"&&h>5)msg="تنبيه واقعية: مع دوام كامل، "+h+" ساعات يوميا مرهقة — جرّب 2–3 ساعات لضمان الاستمرارية.";
-    else if(weekly>35)msg="تنبيه واقعية: "+weekly+" ساعة أسبوعيا تعادل وظيفة ثانية — راجع الرقم أو مدّد المدة.";
-    else if(h<1&&dy<3)msg="تنبيه: أقل من 3 ساعات أسبوعيا يعني تقدما بطيئا جدا — فكّر بهدف أصغر أو مدة أطول.";
-    if(msg){w.textContent=msg;w.classList.remove("hidden")}else{w.classList.add("hidden")}
+    var sl=parseFloat($("sleep").value);
+    var weekly=h*dy,w=$("timeWarn"),msgs=[];
+    if(job==="موظف دوام كامل"&&h>5)msgs.push("مع دوام كامل، "+h+" ساعات يوميا مرهقة — جرّب 2–3 ساعات لضمان الاستمرارية.");
+    if(weekly>35)msgs.push(weekly+" ساعة أسبوعيا تعادل وظيفة ثانية — راجع الرقم أو مدّد المدة.");
+    if(h<1&&dy<3)msgs.push("أقل من 3 ساعات أسبوعيا تقدم بطيء جدا — فكّر بهدف أصغر أو مدة أطول.");
+    if(sl<6)msgs.push("نومك "+sl+" ساعات: قلة النوم تهدم أي خطة — عالج النوم أولا.");
+    if(msgs.length){w.textContent="تنبيه واقعية: "+msgs.join(" ")}else{w.textContent=""}
+    w.classList.toggle("hidden",!msgs.length);
   }
 
   function meter(){
@@ -820,10 +877,10 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
   meter();timeCheck();
 
   var TPLS={
-    dev:{goal:"تعلم مهارة",goalText:"أريد تعلم البرمجة وبناء 3 مشاريع والحصول على أول عمل حر خلال 12 أسبوعا.",hours:2,days:5,weeks:12,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"لا أعرف من أين أبدأ",job:"موظف دوام كامل",energy:"مرتفعة مساء",place:"عندي حاسوب وإنترنت جيد"},
-    fit:{goal:"صحة / لياقة",goalText:"أريد خسارة 6 كيلو وبناء عادة المشي اليومي خلال 8 أسابيع.",hours:1,days:4,weeks:8,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"الإحباط السريع",job:"موظف دوام كامل",energy:"مرتفعة صباحا",health:"سليم"},
-    debt:{goal:"تنظيم الديون",goalText:"أريد سداد ديون البطاقات وبناء صندوق طوارئ صغير خلال 16 أسبوعا.",hours:1,days:3,weeks:16,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"ضيق الوقت",income:"محدود جدا"},
-    exam:{goal:"دراسة / اختبار",goalText:"أريد اجتياز اختبار القدرات بدرجة عالية خلال 6 أسابيع.",hours:3,days:6,weeks:6,budget:"رمزية أقل من 50$",level:"عندي أساسيات",obstacle:"التشتت وعدم الاستمرارية",job:"طالب"}
+    dev:{goal:"تعلم مهارة",goalText:"أريد تعلم البرمجة وبناء 3 مشاريع والحصول على أول عمل حر خلال 12 أسبوعا.",hours:2,days:5,weeks:12,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"لا أعرف من أين أبدأ",job:"موظف دوام كامل",energy:"مرتفعة مساء",place:"عندي حاسوب وإنترنت جيد",wake:"07:00",sleep:7,commute:60,dependents:0},
+    fit:{goal:"صحة / لياقة",goalText:"أريد خسارة 6 كيلو وبناء عادة المشي اليومي خلال 8 أسابيع.",hours:1,days:4,weeks:8,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"الإحباط السريع",job:"موظف دوام كامل",energy:"مرتفعة صباحا",health:"سليم",wake:"06:00",sleep:7,commute:20,dependents:0},
+    debt:{goal:"تنظيم الديون",goalText:"أريد سداد ديون البطاقات وبناء صندوق طوارئ صغير خلال 16 أسبوعا.",hours:1,days:3,weeks:16,budget:"صفر — مجاني فقط",level:"مبتدئ تماما",obstacle:"ضيق الوقت",income:"محدود جدا",wake:"07:00",sleep:6.5,commute:45,dependents:0},
+    exam:{goal:"دراسة / اختبار",goalText:"أريد اجتياز اختبار القدرات بدرجة عالية خلال 6 أسابيع.",hours:3,days:6,weeks:6,budget:"رمزية أقل من 50$",level:"عندي أساسيات",obstacle:"التشتت وعدم الاستمرارية",job:"طالب",wake:"06:00",sleep:7,commute:30,dependents:0}
   };
   document.querySelectorAll(".tpl-btn").forEach(function(b){
     b.addEventListener("click",function(){
@@ -833,8 +890,10 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
       if(t.obstacle)$("obstacle").value=t.obstacle;if(t.job)$("job").value=t.job;
       if(t.energy)$("energy").value=t.energy;if(t.place)$("place").value=t.place;
       if(t.health)$("health").value=t.health;if(t.income)$("income").value=t.income;
+      $("wake").value=t.wake||"07:00";$("sleep").value=t.sleep||7;
+      $("commute").value=t.commute||0;$("dependents").value=t.dependents||0;
       setChips("goalChips",[t.goal]);
-      ["hours","days","weeks"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
+      ["hours","days","weeks","sleep","commute","dependents"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
       meter();timeCheck();show(2);
     });
   });
@@ -857,6 +916,8 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     return {
       job:$("job").value, age:$("age").value, income:$("income").value, health:$("health").value,
       hours:parseFloat($("hours").value), days:parseInt($("days").value,10),
+      wake:$("wake").value, sleep:parseFloat($("sleep").value),
+      commute:parseInt($("commute").value,10), dependents:parseInt($("dependents").value,10),
       duties:selected("dutyChips"), faith:selected("faithChips"),
       energy:$("energy").value, place:$("place").value, weekend:$("weekend").value,
       goals:selected("goalChips"), goal:$("goalText").value.trim(),
@@ -869,12 +930,26 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
     $("goalText").value=d.goal||"";$("goal2").value=d.goal2||"";
     if(d.hours)$("hours").value=d.hours;if(d.days)$("days").value=d.days;
     if(d.weeks)$("weeks").value=d.weeks;if(d.share)$("share").value=d.share;if(d.target)$("target").value=d.target;
+    if(d.wake)$("wake").value=d.wake;if(d.sleep)$("sleep").value=d.sleep;
+    if(d.commute!==undefined)$("commute").value=d.commute;if(d.dependents!==undefined)$("dependents").value=d.dependents;
     ["job","age","income","health","energy","place","weekend","budget","level","obstacle"].forEach(function(k){if(d[k])$(k).value=d[k]});
     if(d.goals)setChips("goalChips",d.goals);
     if(d.duties)setChips("dutyChips",d.duties);
     if(d.faith)setChips("faithChips",d.faith);
-    ["hours","days","weeks","share"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
+    ["hours","days","weeks","share","sleep","commute","dependents"].forEach(function(id){$(id).dispatchEvent(new Event("input"))});
     meter();timeCheck();
+  }
+
+  function dayRule(d){
+    var sl=(d.sleep===undefined?7:d.sleep),cm=(d.commute===undefined?0:d.commute),dp=(d.dependents===undefined?0:d.dependents);
+    var parts=[];
+    if(sl<6)parts.push("نومك "+sl+" ساعات فقط: ثبّت موعد النوم أولا — أي خطة تنهار دون نوم");
+    else parts.push("نومك "+sl+" ساعات");
+    if(d.wake)parts.push("تستيقظ "+d.wake);
+    if(cm>=60)parts.push("مواصلاتك "+cm+" دقيقة يوميا (≈"+Math.round(cm*d.days/60*10)/10+" س أسبوعيا): حوّلها لدروس صوتية");
+    else if(cm>0)parts.push("مواصلات "+cm+" دقيقة: استغلها للمراجعة السمعية");
+    if(dp>0)parts.push("لديك "+dp+" معالين: جلسات قابلة للمقاطعة والاستئناف");
+    return "إيقاع يومك: "+parts.join("، ")+".";
   }
 
   function dutyRule(x){
@@ -977,6 +1052,7 @@ footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--mute
 
     var items="<li>"+esc(ageRule(d.age))+"</li>";
     var hr=healthRule(d.health,g); if(hr)items+="<li>"+esc(hr)+"</li>";
+    items+="<li>"+esc(dayRule(d))+"</li>";
     items+=d.duties.length?d.duties.map(function(x){return "<li>"+esc(dutyRule(x))+"</li>"}).join(""):"<li>لا التزامات استثنائية: التحدي هو الاستمرارية لا الوقت — التزم بنفس الموعد يوميا في "+esc(d.place)+".</li>";
     if(d.faith.indexOf("مراعاة أوقات الصلاة")>=0)items+="<li>الصلاة: قسّم الجلسة بين الصلوات، واجعل بعد الفجر أو بعد العشاء موعدا ثابتا.</li>";
     if(d.faith.indexOf("الصيام (رمضان أو تطوع)")>=0)items+="<li>الصيام: اعتمد نسخة الطاقة المنخفضة نهارا، والجلسة الأساسية بعد الإفطار بساعتين.</li>";
