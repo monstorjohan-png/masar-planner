@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مَسار — خطط محكمة من ظروف حياتك</title>
+<meta name="description" content="موقع يحوّل ظروف حياتك إلى برومبت دقيق وخطة محكمة قابلة للتنفيذ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAF8F4; --surface:#FFFFFF; --surface-2:#F1EDE6;
+  --border:#E5DFD3; --muted:#6E675C; --text:#1C1A16; --text-hi:#0C0B09;
+  --accent:#1A5C4D; --accent-hover:#14493E; --accent-soft:#E3EFE9;
+  --gold:#B98A2F; --gold-soft:#F6ECD4;
+  --danger:#9C2D2D;
+  --r-sm:8px; --r-md:12px; --r-lg:18px; --r-full:999px;
+  --shadow-sm:0 1px 2px rgba(28,26,22,.07);
+  --shadow-md:0 10px 28px rgba(28,26,22,.09);
+  --ease:cubic-bezier(.4,0,.2,1); --dur:.3s;
+  --fs-sm:.875rem; --fs-base:1rem; --fs-lg:1.2rem; --fs-xl:1.6rem; --fs-2xl:2.2rem; --fs-3xl:3rem;
+}
+[data-theme="dark"]{
+  --bg:#12110E; --surface:#1C1B17; --surface-2:#26241D;
+  --border:#333026; --muted:#B3AA99; --text:#EDE8DC; --text-hi:#FFFFFF;
+  --accent:#5FC2A6; --accent-hover:#7AD4B8; --accent-soft:#1E332C;
+  --gold:#D9A93F; --gold-soft:#332913;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.8; font-size:var(--fs-base);
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:44px 44px; opacity:.22;
+  mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,black 30%,transparent 75%);
+}
+header,main,footer{position:relative;z-index:1}
+.wrap{max-width:1060px;margin-inline:auto;padding-inline:1.1rem}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+/* Header */
+.site-header{
+  position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none}
+.brand-mark{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:var(--text-hi);color:var(--bg);font-weight:700;font-size:1.3rem;
+  box-shadow:var(--shadow-sm); flex:none;
+}
+[data-theme="dark"] .brand-mark{background:var(--accent);color:#0C0B09}
+.brand b{display:block;line-height:1.2}
+.brand small{display:block;color:var(--muted);font-size:.8rem;line-height:1.4}
+.nav-actions{display:flex;gap:.6rem;align-items:center}
+.btn{
+  appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--text);
+  padding:.65rem 1.2rem;border-radius:var(--r-full);font:inherit;font-weight:600;cursor:pointer;
+  transition:all var(--dur) var(--ease);text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+[data-theme="dark"] .btn-primary{color:#0C0B09}
+.btn-ghost{background:transparent}
+.btn-small{padding:.4rem .9rem;font-size:var(--fs-sm)}
+.theme-toggle{width:44px;height:44px;border-radius:50%;padding:0;justify-content:center}
+
+/* Hero */
+.hero{padding:3.2rem 0 1.6rem;text-align:right}
+.hero-grid{display:grid;gap:1.4rem}
+@media(min-width:900px){.hero-grid{grid-template-columns:1.25fr .85fr;align-items:start}}
+.kicker{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--gold-soft);border:1px solid var(--border);color:var(--text);
+  padding:.3rem .9rem;border-radius:var(--r-full);font-size:var(--fs-sm);font-weight:600;
+}
+.kicker i{width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block}
+h1{font-size:clamp(2rem,5vw,var(--fs-3xl));line-height:1.35;margin:.9rem 0 .6rem;font-weight:700;letter-spacing:-.01em}
+h1 .line-accent{position:relative;white-space:nowrap}
+h1 .line-accent::after{content:"";position:absolute;right:0;left:0;bottom:6px;height:10px;background:var(--gold-soft);z-index:-1;border-radius:4px}
+.hero p.lead{color:var(--muted);font-size:var(--fs-lg);max-width:56ch;margin:0}
+.hero-points{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.1rem;list-style:none;padding:0}
+.hero-points li{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-full);padding:.35rem .9rem;font-size:var(--fs-sm);box-shadow:var(--shadow-sm)}
+.trust-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:1.3rem;box-shadow:var(--shadow-md);
+}
+.trust-card h2{font-size:1.05rem;margin:0 0 .6rem}
+.meter{height:10px;background:var(--surface-2);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
+.meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--gold));transition:width .5s var(--ease)}
+.trust-meta{display:flex;justify-content:space-between;font-size:var(--fs-sm);color:var(--muted);margin-top:.5rem}
+.mini-steps{list-style:none;padding:0;margin:1rem 0 0;display:grid;gap:.6rem}
+.mini-steps li{display:flex;gap:.7rem;align-items:flex-start;font-size:.92rem}
+.dot{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--border);display:grid;place-items:center;font-weight:700;flex:none;color:var(--accent)}
+[data-theme="dark"] .dot{color:var(--accent)}
+
+/* Builder */
+.builder{padding:1.4rem 0 3rem}
+.steps-bar{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.step-pill{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:.6rem .9rem;font-size:var(--fs-sm);display:flex;gap:.6rem;align-items:center;opacity:.65}
+.step-pill.active{opacity:1;border-color:var(--accent);box-shadow:var(--shadow-sm)}
+.step-pill.done{opacity:1;border-color:var(--gold)}
+.step-pill strong{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--border);flex:none}
+.step-pill.active strong{background:var(--accent);color:#fff;border-color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:1.4rem}
+@media(min-width:768px){.card{padding:2rem}}
+fieldset{border:0;padding:0;margin:0 0 1.4rem}
+legend{font-weight:700;font-size:1.1rem;margin-bottom:.8rem;padding:0}
+.grid2{display:grid;gap:1rem}
+@media(min-width:768px){.grid2{grid-template-columns:1fr 1fr}}
+.field{display:grid;gap:.4rem}
+label{font-weight:600;font-size:.95rem}
+.hint{font-size:.82rem;color:var(--muted)}
+input,select,textarea{
+  font:inherit;color:var(--text);background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:.7rem .9rem;width:100%;transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent)}
+textarea{min-height:110px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{border:1.5px solid var(--border);background:var(--bg);border-radius:var(--r-full);padding:.45rem 1rem;font:inherit;font-size:.9rem;cursor:pointer;transition:all var(--dur) var(--ease)}
+.chip[aria-pressed="true"]{background:var(--text-hi);color:var(--bg);border-color:var(--text-hi)}
+.range-row{display:flex;align-items:center;gap:1rem}
+input[type="range"]{accent-color:var(--accent);padding:0;border:0;background:transparent}
+.range-val{background:var(--accent-soft);border:1px solid var(--border);border-radius:8px;padding:.15rem .7rem;font-weight:700;min-width:74px;text-align:center}
+.form-nav{display:flex;gap:.7rem;justify-content:space-between;flex-wrap:wrap;margin-top:1rem}
+.error{color:var(--danger);font-size:.88rem;min-height:1.5em;margin:.4rem 0 0}
+
+/* Output */
+.output-grid{display:grid;gap:1rem;margin-top:1.2rem}
+@media(min-width:900px){.output-grid{grid-template-columns:1fr 1fr}}
+.out-box{background:var(--bg);border:1px dashed var(--border);border-radius:var(--r-md);padding:1.1rem}
+.out-box h3{margin:0 0 .6rem;font-size:1rem;display:flex;align-items:center;gap:.5rem}
+.out-box h3 .tag{font-size:.72rem;background:var(--gold-soft);border:1px solid var(--border);border-radius:99px;padding:.05rem .6rem}
+pre.prompt{
+  white-space:pre-wrap;font-family:inherit;font-size:.92rem;line-height:1.9;margin:0;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.9rem;max-height:420px;overflow:auto;
+}
+.plan h4{margin:1.1rem 0 .4rem;font-size:1rem}
+.plan ul{margin:.3rem 0;padding-inline-start:1.2rem}
+.plan li{margin-bottom:.3rem}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.8rem 0}
+.kpi div{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem;text-align:center}
+.kpi b{display:block;font-size:1.15rem}
+.kpi span{font-size:.78rem;color:var(--muted)}
+table.plan-table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:.6rem}
+table.plan-table th,table.plan-table td{border:1px solid var(--border);padding:.5rem .6rem;text-align:right}
+table.plan-table th{background:var(--surface-2)}
+.toolbar{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.hidden{display:none!important}
+footer{border-top:1px solid var(--border);padding:1.4rem 0 2rem;color:var(--muted);font-size:.88rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:375px){.wrap{padding-inline:.8rem}.card{padding:1rem}.kpi{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="#" aria-label="مَسار - الرئيسية">
+      <span class="brand-mark" aria-hidden="true">م</span>
+      <span><b>مَسار</b><small>خطط محكمة من ظروف حياتك الحقيقية</small></span>
+    </a>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-small theme-toggle" id="themeBtn" aria-label="تبديل المظهر">◐</button>
+      <a class="btn btn-primary btn-small" href="#builder">ابنِ خطتك</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="mainTitle">
+    <div class="hero-grid">
+      <div>
+        <span class="kicker"><i></i> محرك promptify + مولّد خطط محلي — بدون حساب</span>
+        <h1 id="mainTitle">ظروفك الحقيقية تتحوّل إلى <span class="line-accent">خطة محكمة</span> قابلة للتنفيذ</h1>
+        <p class="lead">أدخل وقتك ودخلك والتزاماتك وهدفك. نحوّل إجاباتك أولا إلى برومبت دقيق منظّم، ثم نولّد خطة أسبوعية بالمهام والساعات والبدائل — تحفظ على جهازك فقط.</p>
+        <ul class="hero-points">
+          <li>⏱ يحترم وقتك المتاح فعلا</li>
+          <li>💰 يراعي الدخل والميزانية</li>
+          <li>🛡 خطة بديلة للطوارئ</li>
+          <li>📋 نسخ وطباعة بضغطة</li>
+        </ul>
+      </div>
+      <aside class="trust-card" aria-label="تقدمك">
+        <h2>اكتمال ملف ظروفك</h2>
+        <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="meterBar"><span id="meterFill"></span></div>
+        <div class="trust-meta"><span id="meterPct">0%</span><span>تُحفظ البيانات محليا فقط</span></div>
+        <ol class="mini-steps">
+          <li><span class="dot">1</span><span><b>ظروف الحياة:</b> العمل، الوقت، الدخل، الالتزامات.</span></li>
+          <li><span class="dot">2</span><span><b>الهدف والمدة:</b> ماذا تريد وخلال كم أسبوع.</span></li>
+          <li><span class="dot">3</span><span><b>البرومبت والخطة:</b> نص دقيق + جدول تنفيذ.</span></li>
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <section class="builder" id="builder" aria-labelledby="builderTitle">
+    <div class="steps-bar" role="list">
+      <div class="step-pill active" id="pill1" role="listitem"><strong>1</strong> ظروف الحياة</div>
+      <div class="step-pill" id="pill2" role="listitem"><strong>2</strong> الهدف والمدة</div>
+      <div class="step-pill" id="pill3" role="listitem"><strong>3</strong> البرومبت والخطة</div>
+    </div>
+
+    <div class="card">
+      <h2 id="builderTitle" style="margin-top:0">ابنِ ملف ظروفك</h2>
+
+      <!-- الخطوة 1 -->
+      <fieldset id="step1">
+        <legend>أولا: ظروفك الحالية</legend>
+        <div class="grid2">
+          <div class="field">
+            <label for="job">الوضع المهني</label>
+            <select id="job">
+              <option value="موظف دوام كامل">موظف دوام كامل</option>
+              <option value="موظف دوام جزئي">موظف دوام جزئي</option>
+              <option value="طالب">طالب</option>
+              <option value="عمل حر">عمل حر</option>
+              <option value="عاطل / باحث عن عمل">عاطل / باحث عن عمل</option>
+              <option value="ربة منزل">ربة منزل</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="income">الدخل الشهري التقريبي</label>
+            <select id="income">
+              <option value="محدود جدا">محدود جدا</option>
+              <option value="متوسط" selected>متوسط</option>
+              <option value="جيد">جيد</option>
+              <option value="بدون دخل حاليا">بدون دخل حاليا</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="hours">ساعات الفراغ يوميا: <span class="range-val" id="hoursVal">2 ساعة</span></label>
+            <div class="range-row"><input type="range" id="hours" min="0.5" max="8" step="0.5" value="2"></div>
+            <span class="hint">احسب فقط الوقت الصافي بعد النوم والعمل والمواصلات.</span>
+          </div>
+          <div class="field">
+            <label for="days">أيام التفرغ أسبوعيا: <span class="range-val" id="daysVal">5 أيام</span></label>
+            <div class="range-row"><input type="range" id="days" min="1" max="7" step="1" value="5"></div>
+          </div>
+        </div>
+        <div class="field" style="margin-top:1rem">
+          <label>التزامات تستهلك وقتك (اختر كل ما ينطبق)</label>
+          <div class="chips" id="dutyChips">
+            <button type="button" class="chip" aria-pressed="false">أطفال</button>
+            <button type="button" class="chip" aria-pressed="false">رعاية أهل</button>
+            <button type="button" class="chip" aria-pressed="false">مواصلات طويلة</button>
+            <button type="button" class="chip" aria-pressed="false">دوام مسائي</button>
+            <button type="button" class="chip" aria-pressed="false">التزامات اجتماعية كثيرة</button>
+            <button type="button" class="chip" aria-pressed="false">مشكلة صحية / إرهاق</button>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:1rem">
+          <div class="field">
+            <label for="energy">مستوى طاقتك غالبا</label>
+            <select id="energy"><option>مرتفعة صباحا</option><option selected>متوسطة متذبذبة</option><option>منخفضة معظم اليوم</option><option>مرتفعة مساء</option></select>
+          </div>
+          <div class="field">
+            <label for="place">بيئة التنفيذ</label>
+            <select id="place"><option>البيت فقط</option><option selected>البيت + الهاتف</option><option>عندي حاسوب وإنترنت جيد</option><option>أتنقل كثيرا</option></select>
+          </div>
+        </div>
+        <p class="error" id="err1"></p>
+        <div class="form-nav"><span></span><button class="btn btn-primary" id="to2">التالي: الهدف ←</button></div>
+      </fieldset>
+
+      <!-- الخطوة 2 -->
+      <fieldset id="step2" class="hidden">
+        <legend>ثانيا: هدفك وحدودك</legend>
+        <div class="field">
+          <label>نوع الهدف</label>
+          <div class="chips" id="goalChips">
+            <button type="button" class="chip" aria-pressed="true">دخل إضافي / عمل</button>
+            <button type="button" class="chip" aria-pressed="false">تعلم مهارة</button>
+            <button type="button" class="chip" aria-pressed="false">دراسة / اختبار</button>
+            <button type="button" class="chip" aria-pressed="false">صحة / لياقة</button>
+            <button type="button" class="chip" aria-pressed="false">تنظيم الديون</button>
+            <button type="button" class="chip" aria-pressed="false">مشروع صغير</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="goalText">صف هدفك بجملة واقعية</label>
+          <textarea id="goalText" placeholder="مثال: أريد تعلم التصميم والحصول على أول عميل خلال 8 أسابيع بمعدل ساعتين يوميا...">أريد بناء مصدر دخل إضافي عبر مهارة رقمية خلال 8 أسابيع.</textarea>
+        </div>
+        <div class="grid2">
+          <div class="field">
+            <label for="weeks">المدة: <span class="range-val" id="weeksVal">8 أسابيع</span></label>
+            <div class="range-row"><input type="range" id="weeks" min="2" max="24" step="1" value="8"></div>
+          </div>
+          <div class="field">
+            <label for="budget">ميزانية متاحة للهدف</label>
+            <select id="budget"><option selected>صفر — مجاني فقط</option><option>رمزية أقل من 50$</option><option>متوسطة حتى 300$</option><option>مفتوحة</option></select>
+          </div>
+          <div class="field">
+            <label for="level">مستواك الحالي</label>
+            <select id="level"><option selected>مبتدئ تماما</option><option>عندي أساسيات</option><option>متوسط وأريد الاحتراف</option></select>
+          </div>
+          <div class="field">
+            <label for="obstacle">أكبر عائق تتوقعه</label>
+            <select id="obstacle"><option>ضيق الوقت</option><option selected>التشتت وعدم الاستمرارية</option><option>نقص المال</option><option>لا أعرف من أين أبدأ</option><option>الإحباط السريع</option></select>
+          </div>
+        </div>
+        <p class="error" id="err2"></p>
+        <div class="form-nav">
+          <button class="btn btn-ghost" id="back1">→ رجوع</button>
+          <button class="btn btn-primary" id="generate">ولّد البرومبت والخطة ←</button>
+        </div>
+      </fieldset>
+
+      <!-- الخطوة 3 -->
+      <fieldset id="step3" class="hidden">
+        <legend>ثالثا: البرومبت الدقيق + خطتك المحكمة</legend>
+        <div class="output-grid">
+          <div class="out-box">
+            <h3>البرومبت الدقيق <span class="tag">منطق promptify</span></h3>
+            <pre class="prompt" id="promptOut"></pre>
+            <div class="toolbar"><button class="btn btn-small" id="copyPrompt">نسخ البرومبت</button></div>
+          </div>
+          <div class="out-box plan" id="planOut" aria-live="polite"></div>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-small" id="copyPlan">نسخ الخطة نصا</button>
+          <button class="btn btn-small" id="printBtn">طباعة / PDF</button>
+          <button class="btn btn-small btn-ghost" id="restart">البدء من جديد</button>
+        </div>
+        <div class="form-nav"><button class="btn btn-ghost" id="back2">→ تعديل المدخلات</button><span></span></div>
+      </fieldset>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">مَسار — يعمل دون خادم. بياناتك لا تغادر متصفحك. صُمم Mobile-First ويحترم تقليل الحركة.</div></footer>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id)};
+  var root=document.documentElement;
+
+  // المظهر
+  var savedTheme=null; try{savedTheme=localStorage.getItem("masar-theme")}catch(e){}
+  if(savedTheme){root.setAttribute("data-theme",savedTheme)}
+  $("themeBtn").addEventListener("click",function(){
+    var next=root.getAttribute("data-theme")==="dark"?"light":"dark";
+    if(next==="light"){root.removeAttribute("data-theme")}else{root.setAttribute("data-theme","dark")}
+    try{localStorage.setItem("masar-theme",next==="light"?"light":"dark")}catch(e){}
+  });
+
+  // الرقائق
+  function chips(id){var el=$(id);el.addEventListener("click",function(e){if(e.target.classList.contains("chip")){var b=e.target;var on=b.getAttribute("aria-pressed")==="true";if(id==="goalChips"&&!on){el.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed","false")})}b.setAttribute("aria-pressed",String(!on));meter()}})}
+  chips("dutyChips");chips("goalChips");
+
+  // المنزلقات
+  function bind(range,val,fmt){var r=$(range),v=$(val);function u(){v.textContent=fmt(parseFloat(r.value));meter()}r.addEventListener("input",u);u()}
+  bind("hours","hoursVal",function(x){return x+" ساعة"});
+  bind("days","daysVal",function(x){return x+" أيام"});
+  bind("weeks","weeksVal",function(x){return x+" أسابيع"});
+  ["job","income","energy","place","goalText","budget","level","obstacle"].forEach(function(id){$(id).addEventListener("input",meter)});
+
+  function selected(id){var out=[];$(id).querySelectorAll(".chip").forEach(function(c){if(c.getAttribute("aria-pressed")==="true")out.push(c.textContent.trim())});return out}
+
+  function meter(){
+    var score=0;
+    if($("goalText").value.trim().length>10)score+=35;
+    score+=20; // المهنة والدخل لهما قيم افتراضية
+    if(selected("dutyChips").length)score+=15; else score+=5;
+    if(selected("goalChips").length)score+=20; else score+=5;
+    score+=10;
+    score=Math.min(100,score);
+    $("meterFill").style.width=score+"%";
+    $("meterPct").textContent=score+"%";
+    $("meterBar").setAttribute("aria-valuenow",score);
+  }
+  meter();
+
+  function show(n){
+    ["step1","step2","step3"].forEach(function(s,i){$(s).classList.toggle("hidden",i!==n-1)});
+    [["pill1",1],["pill2",2],["pill3",3]].forEach(function(p){
+      $(p[0]).classList.toggle("active",p[1]===n);
+      $(p[0]).classList.toggle("done",p[1]<n);
+    });
+    document.getElementById("builder").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  $("to2").addEventListener("click",function(){show(2)});
+  $("back1").addEventListener("click",function(){show(1)});
+  $("back2").addEventListener("click",function(){show(2)});
+  $("restart").addEventListener("click",function(){show(1)});
+
+  function data(){
+    return {
+      job:$("job").value, income:$("income").value,
+      hours:parseFloat($("hours").value), days:parseInt($("days").value,10),
+      duties:selected("dutyChips"), energy:$("energy").value, place:$("place").value,
+      goals:selected("goalChips"), goal:$("goalText").value.trim(),
+      weeks:parseInt($("weeks").value,10), budget:$("budget").value,
+      level:$("level").value, obstacle:$("obstacle").value
+    };
+  }
+
+  // (ج) منطق promptify: فقرة ملخص + أقسام منظمة، بطول قريب من المدخلات، دون اختراع
+  function buildPrompt(d){
+    var duties=d.duties.length?d.duties.join("، "):"لا التزامات استثنائية مذكورة";
+    return "أنشئ خطة تنفيذية محكمة لشخص ظروفه كالتالي، مع الالتزام الكامل بهذه القيود دون اقتراح ما يخالفها.\n\n"
+    +"## السياق والقيود\n"
+    +"- الوضع المهني: "+d.job+"\n"
+    +"- الدخل: "+d.income+" | ميزانية الهدف: "+d.budget+"\n"
+    +"- الوقت المتاح: "+d.hours+" ساعة يوميا × "+d.days+" أيام أسبوعيا ("+(d.hours*d.days)+" ساعة أسبوعيا)\n"
+    +"- الالتزامات: "+duties+"\n"
+    +"- الطاقة: "+d.energy+" | بيئة التنفيذ: "+d.place+"\n\n"
+    +"## الهدف\n"
+    +"- النوع: "+(d.goals.join("، ")||"عام")+" | المستوى: "+d.level+"\n"
+    +"- الوصف: "+d.goal+"\n"
+    +"- المدة: "+d.weeks+" أسابيع | العائق الأكبر: "+d.obstacle+"\n\n"
+    +"## المطلوب في الخطة\n"
+    +"- جدول أسبوعي بالساعات، ومهام يومية لا تتجاوز "+d.hours+" ساعة\n"
+    +"- مؤشر قياس أسبوعي واحد يثبت التقدم\n"
+    +"- قاعدة طوارئ عند ضياع يوم كامل، وخطة بديلة منخفضة الطاقة\n"
+    +"- لغة عربية مباشرة، بلا حشو، وخطوات قابلة للتنفيذ من "+d.place;
+  }
+
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+  function buildPlan(d){
+    var weekly=d.hours*d.days;
+    var total=Math.round(weekly*d.weeks);
+    var focus=d.hours>=3?"جلسة عميقة واحدة + مراجعة":"جلستان قصيرتان (تعلم + تطبيق)";
+    var track=d.goals.join("، ")||"الهدف العام";
+    var phase=Math.max(2,Math.round(d.weeks/3));
+    var lowBudget=d.budget.indexOf("صفر")===0||d.budget.indexOf("مفتوحة")<0&&d.budget.indexOf("رمزية")===0;
+    var rows="";
+    var w1="تأسيس: "+(d.level==="مبتدئ تماما"?"أساسيات ومصطلحات من مصادر مجانية":"تثبيت الأساس وسد الفجوات");
+    var w2="بناء: إنتاج حقيقي (مشروع/ملف أعمال/اختبارات) بمعدل "+weekly+" ساعة أسبوعيا";
+    var w3="إطلاق وقياس: عرض النتيجة الأولى وتصحيح المسار";
+    rows+="<tr><td>1 – "+phase+"</td><td>"+esc(w1)+"</td><td>"+weekly+" س</td><td>إتمام الأساس دون تخطي</td></tr>";
+    rows+="<tr><td>"+(phase+1)+" – "+(phase*2)+"</td><td>"+esc(w2)+"</td><td>"+weekly+" س</td><td>مخرج واحد قابل للعرض</td></tr>";
+    rows+="<tr><td>"+(phase*2+1)+" – "+d.weeks+"</td><td>"+esc(w3)+"</td><td>"+weekly+" س</td><td>"+esc(track)+" متحقق جزئيا</td></tr>";
+
+    var duties=d.duties.length?"<li><b>التكيف مع ظروفك ("+esc(d.duties.join("، "))+"):</b> ثبّت موعد الجلسة بعد أنشط وقت ("+esc(d.energy)+")، وجهّز نسخة 20 دقيقة للأيام المزدحمة.</li>":"<li><b>تثبيت العادة:</b> نفس الموعد يوميا في "+esc(d.place)+"، وهاتف صامت أثناء الجلسة.</li>";
+
+    return "<h3>خطتك المحكمة — "+d.weeks+" أسابيع</h3>"
+    +'<div class="kpi"><div><b>'+weekly+' س</b><span>أسبوعيا</span></div><div><b>'+total+' س</b><span>إجمالي الخطة</span></div><div><b>'+d.days+' أيام</b><span>التزام أسبوعي</span></div></div>'
+    +"<h4>الوصفة اليومية ("+d.hours+" ساعة)</h4><ul>"
+    +"<li><b>النمط:</b> "+focus+".</li>"
+    +"<li><b>التوزيع:</b> 70% تطبيق عملي، 20% تعلم، 10% مراجعة وتوثيق.</li>"
+    +duties
+    +"<li><b>العائق ("+esc(d.obstacle)+"):</b> مؤقت 25 دقيقة + استراحة 5، ومنع الهاتف أول 50 دقيقة.</li></ul>"
+    +"<h4>المراحل</h4><table class='plan-table'><tr><th>الأسابيع</th><th>التركيز</th><th>الحمل</th><th>مؤشر النجاح</th></tr>"+rows+"</table>"
+    +"<h4>قواعد الطوارئ</h4><ul>"
+    +"<li>ضاع يوم؟ لا تعوّضه كله — أضف 30 دقيقة لليومين التاليين فقط.</li>"
+    +"<li>طاقة منخفضة؟ نفّذ نسخة 20 دقيقة: مراجعة + خطوة صغيرة واحدة.</li>"
+    +(lowBudget?"<li>ميزانية محدودة: مصادر مجانية فقط + أدوات "+esc(d.place)+" المتاحة.</li>":"<li>استثمر الميزانية في أصل واحد يسرّع النتيجة، لا في أدوات كثيرة.</li>")
+    +"</ul>"
+    +"<h4>قياس أسبوعي (10 دقائق كل جمعة)</h4><ul><li>ساعات منفذة مقابل "+weekly+"؟</li><li>مخرج واحد؟</li><li>ما العائق؟ وما إصلاح الأسبوع القادم؟</li></ul>";
+  }
+
+  function planText(d){
+    var el=$("planOut");return el.innerText||el.textContent;
+  }
+
+  $("generate").addEventListener("click",function(){
+    var d=data();
+    if(d.goal.length<10){$("err2").textContent="صف هدفك بجملة واضحة (10 أحرف على الأقل).";return}
+    $("err2").textContent="";
+    var p=buildPrompt(d);
+    $("promptOut").textContent=p;
+    $("planOut").innerHTML=buildPlan(d);
+    try{localStorage.setItem("masar-data",JSON.stringify(d));localStorage.setItem("masar-prompt",p)}catch(e){}
+    show(3);
+  });
+
+  $("copyPrompt").addEventListener("click",function(){copy($("promptOut").textContent,"تم نسخ البرومبت")});
+  $("copyPlan").addEventListener("click",function(){copy(planText(),"تم نسخ الخطة")});
+  function copy(t,msg){
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast(msg)},function(){fallback()})}
+    else fallback();
+    function fallback(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){}ta.remove()}
+  }
+  function toast(m){var b=$("copyPrompt");var old=b.textContent;b.textContent=m;setTimeout(function(){b.textContent=old},1500)}
+  $("printBtn").addEventListener("click",function(){window.print()});
+
+  // استعادة محفوظة
+  try{
+    var s=localStorage.getItem("masar-data");
+    if(s){var d=JSON.parse(s);if(d.goal)$("goalText").value=d.goal;if(d.hours)$("hours").value=d.hours;if(d.days)$("days").value=d.days;if(d.weeks)$("weeks").value=d.weeks;meter()}
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
